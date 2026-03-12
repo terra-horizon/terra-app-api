@@ -5,11 +5,11 @@
 		"Title": "Terra Gateway API",
 		"Description": "Gateway API exposing the Terra underpinning functionality",
 		"Terms": {
-			"Url": "https://datagems.eu/terms"
+			"Url": "https://terra.eu/terms"
 		},
 		"Contact": {
 			"Name": "Terra helpdesk",
-			"Url": "https://datagems.eu/contact-us/"
+			"Url": "https://terra.eu/contact-us/"
 		},
 		"License": {
 			"Name": "EUPL-1.2 license",
@@ -27,7 +27,7 @@
 				"terra-app-api": "Terra Gateway API"
 			},
 			"ClientId": "swagger-client",
-			"ClientName": "Swagger UI - Terra Gateway API - dg-app-api",
+			"ClientName": "Swagger UI - Terra Gateway API - terra-app-api",
 			"UsePkce": false
 		}
 	}
