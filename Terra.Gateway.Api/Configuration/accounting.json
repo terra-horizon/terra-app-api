@@ -2,6 +2,6 @@
 	"Accounting": {
 		"Enable": true,
 		"Level": "Information",
-		"ServiceId": "dg-app-api"
+		"ServiceId": "terra-app-api"
 	}
 }

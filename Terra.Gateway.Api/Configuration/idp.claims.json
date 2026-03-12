@@ -24,8 +24,8 @@
 					},
 					{
 						"Type": "resource_access",
-						"Path": "dg-app-api.roles",
-						"Prefix": "dg-app-api_"
+						"Path": "terra-app-api.roles",
+						"Prefix": "terra-app-api_"
 					}
 				]
 			}

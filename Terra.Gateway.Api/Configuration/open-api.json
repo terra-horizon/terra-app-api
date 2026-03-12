@@ -24,7 +24,7 @@
 				"openid": "OpenID Connect",
 				"profile": "User profile",
 				"email": "Email",
-				"dg-app-api": "Terra Gateway API"
+				"terra-app-api": "Terra Gateway API"
 			},
 			"ClientId": "swagger-client",
 			"ClientName": "Swagger UI - Terra Gateway API - dg-app-api",

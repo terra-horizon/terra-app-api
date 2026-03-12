@@ -1,7 +1,7 @@
 {
 	"AAIService": {
 		"Service": {
-			"Scope": "dg-app-api-keycloak-admin",
+			"Scope": "terra-app-api-keycloak-admin",
 			"BaseUrl": "%{AAIBaseUrl}%",
 			"ContextGrantGroupPrefix": "ctx-grant",
 			"ContextGrantTypeAttributeName": "target-type",

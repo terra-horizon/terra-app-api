@@ -2,7 +2,7 @@
 	"Idp": {
 		"Client": {
 			"Authority": "%{IdpAuthority}%",
-			"ClientId": "dg-app-api",
+			"ClientId": "terra-app-api",
 			"ClientSecret": "%{IdpClientSecret}%",
 			"ClientAccessTokenUrl": "%{IdpClientAccessTokenUrl}%",
 			"RequireHttps": true,
