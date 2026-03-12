@@ -1,0 +1,63 @@
+﻿using Cite.Tools.Auth.Claims;
+using Cite.Tools.Common.Extensions;
+using Cite.Tools.Data.Censor;
+using Cite.Tools.FieldSet;
+using Cite.Tools.Logging;
+using Cite.Tools.Logging.Extensions;
+using Cite.WebTools.CurrentPrincipal;
+using Terra.Gateway.App.Authorization;
+using Terra.Gateway.App.Common;
+using Microsoft.Extensions.Logging;
+
+namespace Terra.Gateway.App.Censor
+{
+	public class WorkflowExecutionCensor : ICensor
+	{
+		private readonly CensorFactory _censorFactory;
+		private readonly IAuthorizationService _authService;
+		private readonly ILogger<WorkflowExecutionCensor> _logger;
+		private readonly IAuthorizationContentResolver _authorizationContentResolver;
+		private readonly ICurrentPrincipalResolverService _principalResolverService;
+		private readonly ClaimExtractor _claimExtractor;
+
+		public WorkflowExecutionCensor(
+			CensorFactory censorFactory,
+			IAuthorizationService authService,
+			ILogger<WorkflowExecutionCensor> logger,
+			IAuthorizationContentResolver authorizationContentResolver,
+			ICurrentPrincipalResolverService principalResolverService,
+			ClaimExtractor claimExtractor)
+		{
+			this._logger = logger;
+			this._censorFactory = censorFactory;
+			this._authService = authService;
+			this._authorizationContentResolver = authorizationContentResolver;
+			this._principalResolverService = principalResolverService;
+			this._claimExtractor = claimExtractor;
+		}
+
+		public async Task<IFieldSet> Censor(IFieldSet fields, CensorContext context)
+		{
+			this._logger.Debug(new MapLogEntry("censoring").And("type", nameof(Model.WorkflowExecution)).And("fields", fields).And("context", context));
+			if (fields == null || fields.IsEmpty()) return null;
+
+			IFieldSet censored = new FieldSet();
+			Boolean authZPass = false;
+			switch (context?.Behavior)
+			{
+				case CensorBehavior.Censor: { authZPass = await this._authService.Authorize(Permission.BrowseWorkflowExecution); break; }
+				case CensorBehavior.Throw:
+				default: { authZPass = await this._authService.AuthorizeForce(Permission.BrowseWorkflowExecution); break; }
+			}
+			if (authZPass)
+			{
+				censored = censored.Merge(fields.ExtractNonPrefixed());
+			}
+
+			censored = censored.MergeAsPrefixed(await this._censorFactory.Censor<WorkflowDefinitionCensor>().Censor(fields.ExtractPrefixed(nameof(Model.WorkflowExecution.Workflow).AsIndexerPrefix()), context), nameof(Model.WorkflowExecution.Workflow));
+			censored = censored.MergeAsPrefixed(await this._censorFactory.Censor<WorkflowTaskInstanceCensor>().Censor(fields.ExtractPrefixed(nameof(Model.WorkflowExecution.TaskInstances).AsIndexerPrefix()), context), nameof(Model.WorkflowExecution.TaskInstances));
+
+			return censored;
+		}
+	}
+}

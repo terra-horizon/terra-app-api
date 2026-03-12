@@ -1,0 +1,130 @@
+{
+  "Permissions": {
+    "ExtendedClaims": [],
+    "Policies": {
+      //Authorization
+      "LookupContextGrantOther": {
+        "Roles": [ "GLOBAL_dg_admin" ],
+        "ContextRoles": [],
+        "Claims": [],
+        "Clients": [],
+        "AllowAnonymous": false,
+        "AllowAuthenticated": false
+      },
+      "LookupContextGrantGroups": {
+        "Roles": [ "GLOBAL_dg_user" ],
+        "ContextRoles": [],
+        "Claims": [],
+        "Clients": [],
+        "AllowAnonymous": false,
+        "AllowAuthenticated": false
+      },
+      "AddUserToContextGrantGroup": {
+        "Roles": [ "GLOBAL_dg_admin" ],
+        "ContextRoles": [ "dg_col-manage", "dg_ds-manage" ],
+        "Claims": [],
+        "Clients": [],
+        "AllowAnonymous": false,
+        "AllowAuthenticated": false
+      },
+      "RemoveUserFromContextGrantGroup": {
+        "Roles": [ "GLOBAL_dg_admin" ],
+        "ContextRoles": [ "dg_col-manage", "dg_ds-manage" ],
+        "Claims": [],
+        "Clients": [],
+        "AllowAnonymous": false,
+        "AllowAuthenticated": false
+      },
+      //User
+      "BrowseUser": {
+        "Roles": [ "GLOBAL_dg_admin" ],
+        "ContextRoles": [],
+        "Claims": [],
+        "Clients": [],
+        "AllowAnonymous": false,
+        "AllowAuthenticated": false
+      },
+      "BrowseUserGroup": {
+        "Roles": [ "GLOBAL_dg_admin" ],
+        "ContextRoles": [],
+        "Claims": [],
+        "Clients": [],
+        "AllowAnonymous": false,
+        "AllowAuthenticated": false
+      },
+      //Workflow
+      "BrowseWorkflowDefinition": {
+        "Roles": [ "GLOBAL_dg_admin" ],
+        "ContextRoles": [],
+        "Claims": [],
+        "Clients": [],
+        "AllowAnonymous": false,
+        "AllowAuthenticated": false
+      },
+      "CanExecuteDatasetOnboarding": {
+        "Roles": [ "GLOBAL_dg_admin", "GLOBAL_dg_dataset-uploader" ],
+        "ContextRoles": [],
+        "Claims": [],
+        "Clients": [],
+        "AllowAnonymous": false,
+        "AllowAuthenticated": false
+      },
+      "CanExecuteDatasetProfiling": {
+        "Roles": [ "GLOBAL_dg_admin", "GLOBAL_dg_dataset-curator" ],
+        "ContextRoles": [],
+        "Claims": [],
+        "Clients": [],
+        "AllowAnonymous": false,
+        "AllowAuthenticated": false
+      },
+      "BrowseWorkflowExecution": {
+        "Roles": [ "GLOBAL_dg_admin" ],
+        "ContextRoles": [],
+        "Claims": [],
+        "Clients": [],
+        "AllowAnonymous": false,
+        "AllowAuthenticated": false
+      },
+      "BrowseWorkflowTask": {
+        "Roles": [ "GLOBAL_dg_admin" ],
+        "ContextRoles": [],
+        "Claims": [],
+        "Clients": [],
+        "AllowAnonymous": false,
+        "AllowAuthenticated": false
+      },
+      "BrowseWorkflowTaskInstance": {
+        "Roles": [ "GLOBAL_dg_admin" ],
+        "ContextRoles": [],
+        "Claims": [],
+        "Clients": [],
+        "AllowAnonymous": false,
+        "AllowAuthenticated": false
+      },
+      "BrowseWorkflowXCom": {
+        "Roles": [ "GLOBAL_dg_admin" ],
+        "ContextRoles": [],
+        "Claims": [],
+        "Clients": [],
+        "AllowAnonymous": false,
+        "AllowAuthenticated": false
+      },
+      "BrowseWorkflowTaskLog": {
+        "Roles": [ "GLOBAL_dg_admin" ],
+        "ContextRoles": [],
+        "Claims": [],
+        "Clients": [],
+        "AllowAnonymous": false,
+        "AllowAuthenticated": false
+      },
+      "RerunWorkflowTask": {
+        "Roles": [ "GLOBAL_dg_admin" ],
+        "ContextRoles": [],
+        "Claims": [],
+        "Clients": [],
+        "AllowAnonymous": false,
+        "AllowAuthenticated": false
+      }
+    }
+  }
+}

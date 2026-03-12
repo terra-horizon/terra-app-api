@@ -1,0 +1,17 @@
+﻿
+namespace Terra.Gateway.App.ErrorCode
+{
+	public class ErrorThesaurus
+	{
+		public ErrorDescription Forbidden { get; set; }
+		public ErrorDescription SystemError { get; set; }
+		public ErrorDescription ModelValidation { get; set; }
+		public ErrorDescription UnsupportedAction { get; set; }
+		public ErrorDescription UnderpinningService { get; set; }
+		public ErrorDescription TokenExchange { get; set; }
+		public ErrorDescription UserSync { get; set; }
+		public ErrorDescription ETagConflict { get; set; }
+		public ErrorDescription ImmutableItem { get; set; }
+		public ErrorDescription UploadRestricted { get; set; }
+	}
+}

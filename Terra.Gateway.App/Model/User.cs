@@ -1,0 +1,14 @@
+﻿
+namespace Terra.Gateway.App.Model
+{
+	public class User
+	{
+		public Guid? Id { get; set; }
+		public String Name { get; set; }
+		public String Email { get; set; }
+		public String IdpSubjectId { get; set; }
+		public DateTime? CreatedAt { get; set; }
+		public DateTime? UpdatedAt { get; set; }
+		public String ETag { get; set; }
+	}
+}
