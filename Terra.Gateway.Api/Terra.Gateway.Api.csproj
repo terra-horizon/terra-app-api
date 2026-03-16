@@ -46,10 +46,6 @@
 	</ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Terra.Gateway.App\Terra.Gateway.App.csproj" />
   </ItemGroup>
 
