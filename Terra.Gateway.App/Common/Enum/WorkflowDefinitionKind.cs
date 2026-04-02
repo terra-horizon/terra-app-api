@@ -7,5 +7,7 @@ namespace Terra.Gateway.App.Common
 	{
 		[Description("BusyBox")]
 		BUSYBOX = 0,
+		[Description("AI Model Registry Inference")]
+		AiModelRegistryInference,
 	}
 }

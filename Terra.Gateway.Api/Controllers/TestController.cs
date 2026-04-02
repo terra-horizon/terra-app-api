@@ -61,7 +61,7 @@ namespace Terra.Gateway.Api.Controllers
                 WorkflowId = selectedDefinition.Id,
                 Configurations = new
                 {
-                   forHours = hours,
+                    forHours = hours,
                 }
             }, new FieldSet
             {
@@ -72,5 +72,36 @@ namespace Terra.Gateway.Api.Controllers
             });
             return Ok();
         }
+
+        [HttpPost("infer")]
+        public async Task<IActionResult> Infer([FromForm] IFormFile file)
+        {
+			using var memoryStream = new MemoryStream();
+			await file.CopyToAsync(memoryStream);
+			var base64 = Convert.ToBase64String(memoryStream.ToArray());
+			List<App.Service.Airflow.Model.AirflowDag> definitions = await this._queryFactory.Query<WorkflowDefinitionHttpQuery>()
+				.Kinds(App.Common.WorkflowDefinitionKind.AiModelRegistryInference)
+				.ExcludeStaled(true)
+				.CollectAsync();
+
+			if (definitions == null || definitions.Count == 0) throw new DGNotFoundException(this._localizer["general_notFound", App.Common.WorkflowDefinitionKind.AiModelRegistryInference.ToString(), nameof(App.Model.WorkflowDefinition)]);
+			if (definitions.Count > 1) throw new DGFoundManyException(this._localizer["general_nonUnique", App.Common.WorkflowDefinitionKind.AiModelRegistryInference.ToString(), nameof(App.Model.WorkflowDefinition)]);
+			App.Service.Airflow.Model.AirflowDag selectedDefinition = definitions.FirstOrDefault();
+			_ = await this._airflowService.ExecuteWorkflowAsync(new App.Model.WorkflowExecutionArgs
+			{
+				WorkflowId = selectedDefinition.Id,
+				Configurations = new
+				{
+					encoded_picture = base64,
+				}
+			}, new FieldSet
+			{
+				Fields = [
+				nameof(App.Model.WorkflowExecution.Id),
+				nameof(App.Model.WorkflowExecution.WorkflowId),
+				]
+			});
+			return Ok();
+		}
     }
 }
