@@ -8,10 +8,8 @@ namespace Terra.Gateway.App.Accounting
 		Persist = 2,
 		Delete = 3,
 		Invoke = 4,
-		Onboard = 5,
-		Profile = 6,
-		Upload = 7,
-		Rerun = 8,
+		Rerun = 5,
+		Infer = 6,
 	}
 
 	public enum KnownUnits : short

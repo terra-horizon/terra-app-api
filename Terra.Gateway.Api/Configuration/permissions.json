@@ -61,16 +61,8 @@
         "AllowAnonymous": false,
         "AllowAuthenticated": false
       },
-      "CanExecuteDatasetOnboarding": {
+      "CanExecuteImageInference": {
         "Roles": [ "GLOBAL_dg_admin", "GLOBAL_dg_dataset-uploader" ],
-        "ContextRoles": [],
-        "Claims": [],
-        "Clients": [],
-        "AllowAnonymous": false,
-        "AllowAuthenticated": false
-      },
-      "CanExecuteDatasetProfiling": {
-        "Roles": [ "GLOBAL_dg_admin", "GLOBAL_dg_dataset-curator" ],
         "ContextRoles": [],
         "Claims": [],
         "Clients": [],

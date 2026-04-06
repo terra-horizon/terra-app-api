@@ -13,8 +13,7 @@ namespace Terra.Gateway.App.Authorization
 		public const String BrowseUserGroup = "BrowseUserGroup";
 		//Workflow
 		public const String BrowseWorkflowDefinition = "BrowseWorkflowDefinition";
-		public const String CanExecuteDatasetOnboarding = "CanExecuteDatasetOnboarding";
-		public const String CanExecuteDatasetProfiling = "CanExecuteDatasetProfiling";
+		public const String CanExecuteImageInference = "CanExecuteImageInference";
 		public const String BrowseWorkflowExecution = "BrowseWorkflowExecution";
 		public const String BrowseWorkflowTask = "BrowseWorkflowTask";
 		public const String BrowseWorkflowTaskInstance = "BrowseWorkflowTaskInstance";

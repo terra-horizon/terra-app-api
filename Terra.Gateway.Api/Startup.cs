@@ -32,6 +32,7 @@ using Terra.Gateway.App.Service.Version;
 using Terra.Gateway.App.Service.Airflow;
 using Terra.Gateway.App.Service.UserSettings;
 using Terra.Gateway.App.Service.AAI;
+using Terra.Gateway.App.Service.AiModelRegistry;
 
 namespace Terra.Gateway.Api
 {
@@ -82,6 +83,7 @@ namespace Terra.Gateway.Api
 			services
 				.AddAirflowServices(this._config.GetSection("AirflowService")) //Airflow
 				.AddAAIServices(this._config.GetSection("AAIService:Service"), this._config.GetSection("AAIService:Cache")) //AAI Keycloak
+				.AddAiModelRegistryServices(this._config.GetSection("AiModelRegistryService")) // AI Model Registry
 			;
 
 			services
