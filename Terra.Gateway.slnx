@@ -1,5 +1,0 @@
-<Solution>
-  <Project Path="Terra.Gateway.Api/Terra.Gateway.Api.csproj" />
-  <Project Path="Terra.Gateway.App/Terra.Gateway.App.csproj" Id="cc4655e6-3182-4e5e-9d70-5e6e9804386f" />
-  <Project Path="Terra.Gateway.Resources/Terra.Gateway.Resources.csproj" Id="5c1ddc59-07dc-491a-8a9b-e30113963f70" />
-</Solution>
