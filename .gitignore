@@ -363,12 +363,12 @@ MigrationBackup/
 FodyWeavers.xsd
 
 .vs/
-Terra.Gateway.Api/bin/
-Terra.Gateway.Api/obj/
-Terra.Gateway.App/bin/
-Terra.Gateway.App/obj/
-Terra.Gateway.Resources/bin/
-Terra.Gateway.Resources/obj/
-Terra.Gateway.Api/Configuration/env.Development.json
+src/Terra.Gateway.Api/bin/
+src/Terra.Gateway.Api/obj/
+src/Terra.Gateway.App/bin/
+src/Terra.Gateway.App/obj/
+src/Terra.Gateway.Resources/bin/
+src/Terra.Gateway.Resources/obj/
 src/Terra.Gateway.Api/Configuration/env.Development.json
-Terra.Gateway.Api/Terra.Gateway.Api.csproj.user
+src/Terra.Gateway.Api/Configuration/env.Development.json
+src/Terra.Gateway.Api/Terra.Gateway.Api.csproj.user
