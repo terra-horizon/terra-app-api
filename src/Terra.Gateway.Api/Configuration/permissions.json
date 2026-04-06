@@ -4,7 +4,7 @@
     "Policies": {
       //Authorization
       "LookupContextGrantOther": {
-        "Roles": [ "GLOBAL_dg_admin" ],
+        "Roles": [ "GLOBAL_terra_admin" ],
         "ContextRoles": [],
         "Claims": [],
         "Clients": [],
@@ -12,7 +12,7 @@
         "AllowAuthenticated": false
       },
       "LookupContextGrantGroups": {
-        "Roles": [ "GLOBAL_dg_user" ],
+        "Roles": [ "GLOBAL_terra_user" ],
         "ContextRoles": [],
         "Claims": [],
         "Clients": [],
@@ -20,16 +20,16 @@
         "AllowAuthenticated": false
       },
       "AddUserToContextGrantGroup": {
-        "Roles": [ "GLOBAL_dg_admin" ],
-        "ContextRoles": [ "dg_col-manage", "dg_ds-manage" ],
+        "Roles": [ "GLOBAL_terra_admin" ],
+        "ContextRoles": [ "terra_col-manage", "terra_ds-manage" ],
         "Claims": [],
         "Clients": [],
         "AllowAnonymous": false,
         "AllowAuthenticated": false
       },
       "RemoveUserFromContextGrantGroup": {
-        "Roles": [ "GLOBAL_dg_admin" ],
-        "ContextRoles": [ "dg_col-manage", "dg_ds-manage" ],
+        "Roles": [ "GLOBAL_terra_admin" ],
+        "ContextRoles": [ "terra_col-manage", "terra_ds-manage" ],
         "Claims": [],
         "Clients": [],
         "AllowAnonymous": false,
@@ -37,7 +37,7 @@
       },
       //User
       "BrowseUser": {
-        "Roles": [ "GLOBAL_dg_admin" ],
+        "Roles": [ "GLOBAL_terra_admin" ],
         "ContextRoles": [],
         "Claims": [],
         "Clients": [],
@@ -45,7 +45,7 @@
         "AllowAuthenticated": false
       },
       "BrowseUserGroup": {
-        "Roles": [ "GLOBAL_dg_admin" ],
+        "Roles": [ "GLOBAL_terra_admin" ],
         "ContextRoles": [],
         "Claims": [],
         "Clients": [],
@@ -54,7 +54,7 @@
       },
       //Workflow
       "BrowseWorkflowDefinition": {
-        "Roles": [ "GLOBAL_dg_admin" ],
+        "Roles": [ "GLOBAL_terra_admin" ],
         "ContextRoles": [],
         "Claims": [],
         "Clients": [],
@@ -62,7 +62,7 @@
         "AllowAuthenticated": false
       },
       "CanExecuteImageInference": {
-        "Roles": [ "GLOBAL_dg_admin", "GLOBAL_dg_dataset-uploader" ],
+        "Roles": [ "GLOBAL_terra_admin", "GLOBAL_terra_dataset-uploader" ],
         "ContextRoles": [],
         "Claims": [],
         "Clients": [],
@@ -70,7 +70,7 @@
         "AllowAuthenticated": false
       },
       "BrowseWorkflowExecution": {
-        "Roles": [ "GLOBAL_dg_admin" ],
+        "Roles": [ "GLOBAL_terra_admin" ],
         "ContextRoles": [],
         "Claims": [],
         "Clients": [],
@@ -78,7 +78,7 @@
         "AllowAuthenticated": false
       },
       "BrowseWorkflowTask": {
-        "Roles": [ "GLOBAL_dg_admin" ],
+        "Roles": [ "GLOBAL_terra_admin" ],
         "ContextRoles": [],
         "Claims": [],
         "Clients": [],
@@ -86,7 +86,7 @@
         "AllowAuthenticated": false
       },
       "BrowseWorkflowTaskInstance": {
-        "Roles": [ "GLOBAL_dg_admin" ],
+        "Roles": [ "GLOBAL_terra_admin" ],
         "ContextRoles": [],
         "Claims": [],
         "Clients": [],
@@ -94,7 +94,7 @@
         "AllowAuthenticated": false
       },
       "BrowseWorkflowXCom": {
-        "Roles": [ "GLOBAL_dg_admin" ],
+        "Roles": [ "GLOBAL_terra_admin" ],
         "ContextRoles": [],
         "Claims": [],
         "Clients": [],
@@ -102,7 +102,7 @@
         "AllowAuthenticated": false
       },
       "BrowseWorkflowTaskLog": {
-        "Roles": [ "GLOBAL_dg_admin" ],
+        "Roles": [ "GLOBAL_terra_admin" ],
         "ContextRoles": [],
         "Claims": [],
         "Clients": [],
@@ -110,7 +110,7 @@
         "AllowAuthenticated": false
       },
       "RerunWorkflowTask": {
-        "Roles": [ "GLOBAL_dg_admin" ],
+        "Roles": [ "GLOBAL_terra_admin" ],
         "ContextRoles": [],
         "Claims": [],
         "Clients": [],

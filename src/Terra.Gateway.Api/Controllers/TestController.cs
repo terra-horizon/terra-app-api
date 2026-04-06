@@ -1,5 +1,6 @@
 ﻿using Cite.Tools.Logging;
 using Cite.Tools.Logging.Extensions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Terra.Gateway.App.Accounting;
 using Terra.Gateway.App.Service.AiModelRegistry;
@@ -25,6 +26,7 @@ namespace Terra.Gateway.Api.Controllers
 		}
 
 		[HttpPost("infer")]
+		[Authorize]
 		public async Task<IActionResult> Infer([FromForm] IFormFile file)
 		{
 			this._logger.Debug(new MapLogEntry("infer").And("model", file));

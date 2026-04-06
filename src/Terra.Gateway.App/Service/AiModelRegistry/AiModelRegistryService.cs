@@ -66,7 +66,7 @@ namespace Terra.Gateway.App.Service.AiModelRegistry
 		public async Task InferAsync(string file, IFieldSet fields = null)
 		{
 			this._logger.Debug(new MapLogEntry("infering").And("file", file));
-			//await this._authorizationService.AuthorizeForce(Permission.CanExecuteImageInference);
+			await this._authorizationService.AuthorizeForce(Permission.CanExecuteImageInference);
 			List<Airflow.Model.AirflowDag> definitions = await this._queryFactory.Query<WorkflowDefinitionHttpQuery>()
 				.Kinds(Common.WorkflowDefinitionKind.AiModelRegistryInference)
 				.ExcludeStaled(true)
