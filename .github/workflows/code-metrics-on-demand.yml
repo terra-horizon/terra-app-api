@@ -1,0 +1,74 @@
+name: "Code Metrics (On Demand)"
+
+on:
+  workflow_dispatch:
+
+jobs:
+  analyze:
+    name: Run Code Metrics
+    runs-on: windows-latest
+
+    permissions:
+      contents: read
+
+    defaults:
+      run:
+        working-directory: src
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+#          dotnet-version: '8.0.x'
+          dotnet-version: '8.0.118'
+
+      - name: Create global.json file
+        run: |
+          @"
+          {
+            "sdk": {
+              "version": "8.0.118"
+            }
+          }
+          "@ | Out-File -Encoding utf8 -FilePath global.json
+          
+      - name: Check sdk version
+        run: |
+          dotnet --list-sdks
+
+      - name: Check .net version
+        run: |
+          dotnet --version
+
+      - name: Check msbuild version
+        run: |
+          dotnet msbuild --version
+
+      - name: Restore dependencies
+        run: dotnet restore Terra.Gateway.sln
+
+      - name: Build solution
+        run: dotnet build Terra.Gateway.sln --configuration Release
+
+      - name: Run code metrics on Terra.Gateway.Api
+        env:
+          MSBuildSDKsPath: C:\Program Files\dotnet\sdk\8.0.118\Sdks
+        run: dotnet msbuild Terra.Gateway.Api/Terra.Gateway.Api.csproj /t:Metrics /p:Configuration=Release
+
+      - name: Run code metrics on Terra.Gateway.App
+        run: dotnet msbuild Terra.Gateway.App/Terra.Gateway.App.csproj /t:Metrics /p:Configuration=Release
+
+      - name: Run code metrics on Terra.Gateway.Resources
+        run: dotnet msbuild Terra.Gateway.Resources/Terra.Gateway.Resources.csproj /t:Metrics /p:Configuration=Release
+
+      - name: Upload Metrics XML reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: code-metrics-reports
+          path: |
+            src/Terra.Gateway.Api/Terra.Gateway.Api.Metrics.xml
+            src/Terra.Gateway.App/Terra.Gateway.App.Metrics.xml
+            src/Terra.Gateway.Resources/Terra.Gateway.Resources.Metrics.xml
