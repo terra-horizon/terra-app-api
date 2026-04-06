@@ -370,4 +370,5 @@ Terra.Gateway.App/obj/
 Terra.Gateway.Resources/bin/
 Terra.Gateway.Resources/obj/
 Terra.Gateway.Api/Configuration/env.Development.json
+src/Terra.Gateway.Api/Configuration/env.Development.json
 Terra.Gateway.Api/Terra.Gateway.Api.csproj.user
