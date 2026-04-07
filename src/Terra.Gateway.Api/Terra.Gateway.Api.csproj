@@ -49,8 +49,4 @@
     <ProjectReference Include="..\Terra.Gateway.App\Terra.Gateway.App.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Transaction\" />
-  </ItemGroup>
-
 </Project>

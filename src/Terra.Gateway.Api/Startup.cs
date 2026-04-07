@@ -28,7 +28,6 @@ using Terra.Gateway.Api.OpenApi;
 using Cite.Tools.Data.Deleter.Extensions;
 using Terra.Gateway.App.Service.Version;
 using Terra.Gateway.App.Service.Airflow;
-using Terra.Gateway.App.Service.AAI;
 using Terra.Gateway.App.Service.AiModelRegistry;
 
 namespace Terra.Gateway.Api
@@ -77,7 +76,6 @@ namespace Terra.Gateway.Api
 
 			services
 				.AddAirflowServices(this._config.GetSection("AirflowService")) //Airflow
-				.AddAAIServices(this._config.GetSection("AAIService:Service"), this._config.GetSection("AAIService:Cache")) //AAI Keycloak
 				.AddAiModelRegistryServices(this._config.GetSection("AiModelRegistryService")) // AI Model Registry
 			;
 
@@ -142,7 +140,7 @@ namespace Terra.Gateway.Api
 				})
 				.ConfigureUseSwagger(this._config.GetSection("OpenApi"), env.EnvironmentName)
 				.BootstrapFormattingCacheInvalidationServices() //Formatting
-				.BootstrapAAICacheInvalidationServices(); //AAI
+				;
 		}
 	}
 }

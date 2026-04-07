@@ -12,7 +12,6 @@ using Terra.Gateway.App.ErrorCode;
 using Terra.Gateway.App.Event;
 using Terra.Gateway.App.Exception;
 using Terra.Gateway.App.Query;
-using Terra.Gateway.App.Service.AAI;
 using Terra.Gateway.App.Service.Airflow;
 
 namespace Terra.Gateway.App.Service.AiModelRegistry
@@ -26,10 +25,8 @@ namespace Terra.Gateway.App.Service.AiModelRegistry
 		private readonly IAuthorizationService _authorizationService;
 		private readonly IAuthorizationContentResolver _authorizationContentResolver;
 		private readonly ILogger<AiModelRegistryService> _logger;
-		private readonly AAIConfig _aaiConfig;
 		private readonly ErrorThesaurus _errors;
 		private readonly EventBroker _eventBroker;
-		private readonly IAAIService _aaiService;
 		private readonly IAirflowService _airflowService;
 		private readonly JsonHandlingService _jsonHandlingService;
 
@@ -38,8 +35,6 @@ namespace Terra.Gateway.App.Service.AiModelRegistry
 			BuilderFactory builderFactory,
 			DeleterFactory deleterFactory,
 			QueryFactory queryFactory,
-			IAAIService aaiService,
-			AAIConfig aaiConfig,
 			IAuthorizationService authorizationService,
 			IAuthorizationContentResolver authorizationContentResolver,
 			IStringLocalizer<Resources.MySharedResources> localizer,
@@ -52,8 +47,6 @@ namespace Terra.Gateway.App.Service.AiModelRegistry
 			this._builderFactory = builderFactory;
 			this._deleterFactory = deleterFactory;
 			this._queryFactory = queryFactory;
-			this._aaiService = aaiService;
-			this._aaiConfig = aaiConfig;
 			this._authorizationService = authorizationService;
 			this._authorizationContentResolver = authorizationContentResolver;
 			this._localizer = localizer;

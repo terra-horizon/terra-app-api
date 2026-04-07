@@ -1,7 +1,6 @@
 ﻿using Cite.Tools.Auth.Claims;
 using Cite.Tools.Data.Query;
 using Cite.WebTools.CurrentPrincipal;
-using Terra.Gateway.App.Service.AAI;
 
 namespace Terra.Gateway.App.Authorization
 {
@@ -12,13 +11,11 @@ namespace Terra.Gateway.App.Authorization
 		private readonly ClaimExtractor _extractor;
 		private readonly IPermissionPolicyService _permissionPolicyService;
 		private readonly QueryFactory _queryFactory;
-		private readonly IAAIService _aaiService;
 
 		public AuthorizationContentResolver(
 			ICurrentPrincipalResolverService currentPrincipalResolverService,
 			IAuthorizationService authorizationService,
 			IPermissionPolicyService permissionPolicyService,
-			IAAIService aaiService,
 			QueryFactory queryFactory,
 			ClaimExtractor extractor)
 		{
@@ -26,7 +23,6 @@ namespace Terra.Gateway.App.Authorization
 			this._authorizationService = authorizationService;
 			this._permissionPolicyService = permissionPolicyService;
 			this._queryFactory = queryFactory;
-			this._aaiService = aaiService;
 			this._extractor = extractor;
 		}
 
