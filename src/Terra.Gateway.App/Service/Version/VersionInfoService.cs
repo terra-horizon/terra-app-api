@@ -1,28 +1,18 @@
 ﻿using Cite.Tools.FieldSet;
 using Cite.Tools.Logging;
 using Cite.Tools.Logging.Extensions;
-using Terra.Gateway.App.Data;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Terra.Gateway.App.Service.Version
 {
 	public class VersionInfoService : IVersionInfoService
 	{
-		private readonly AppDbContext _dbContext;
 		private readonly ILogger<VersionInfoService> _logger;
 
 		public VersionInfoService(
-			ILogger<VersionInfoService> logger,
-			AppDbContext dbContext)
+			ILogger<VersionInfoService> logger)
 		{
 			this._logger = logger;
-			this._dbContext = dbContext;
 		}
 
 		public async Task<List<Model.VersionInfo>> CurrentAsync(IFieldSet fields = null)
@@ -30,15 +20,8 @@ namespace Terra.Gateway.App.Service.Version
 			fields = fields ?? new FieldSet(nameof(Model.VersionInfo.Key), nameof(Model.VersionInfo.Version), nameof(Model.VersionInfo.DeployedAt));
 			this._logger.Debug(new MapLogEntry("current").And("type", nameof(App.Model.VersionInfo)).And("fields", fields));
 
-			List<Data.VersionInfo> items = await this._dbContext.VersionInfos.AsNoTracking().ToListAsync();
-			List<String> keys = items.Select(x => x.Key).Distinct().ToList();
 
 			List<Data.VersionInfo> latests = new List<Data.VersionInfo>();
-			foreach (String key in keys ?? new List<string>())
-			{
-				Data.VersionInfo latest = items.Where(x => x.Key == key).Aggregate((a, b) => a.DeployedAt > b.DeployedAt ? a : b);
-				latests.Add(latest);
-			}
 
 			List<Model.VersionInfo> models = this.ToModel(latests, fields);
 			return models;

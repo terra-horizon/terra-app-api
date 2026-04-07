@@ -25,12 +25,9 @@ using Cite.Tools.Data.Query.Extensions;
 using Cite.Tools.Data.Builder.Extensions;
 using Cite.Tools.Validation.Extensions;
 using Terra.Gateway.Api.OpenApi;
-using Microsoft.EntityFrameworkCore;
-using Terra.Gateway.Api.Transaction;
 using Cite.Tools.Data.Deleter.Extensions;
 using Terra.Gateway.App.Service.Version;
 using Terra.Gateway.App.Service.Airflow;
-using Terra.Gateway.App.Service.UserSettings;
 using Terra.Gateway.App.Service.AAI;
 using Terra.Gateway.App.Service.AiModelRegistry;
 
@@ -76,8 +73,6 @@ namespace Terra.Gateway.Api
 				.AddTransient<AccountBuilder>() //Account builder
 				.AddValidatorsAndFactory(typeof(Cite.Tools.Validation.IValidator), typeof(Terra.Gateway.App.AssemblyHandle), typeof(Terra.Gateway.Api.AssemblyHandle)) //Validators
 				.AddDeletersAndFactory(typeof(Cite.Tools.Data.Deleter.IDeleter), typeof(Terra.Gateway.App.AssemblyHandle)) //Deleters
-				.AddDbContext<Terra.Gateway.App.Data.AppDbContext>(options => options.UseNpgsql(this._config.GetValue<String>("DB:ConnectionStrings:AppDbContext"))) //DbContext
-				.AddScoped<AppTransactionFilter>() //Transaction Filter
 			;
 
 			services
@@ -86,10 +81,7 @@ namespace Terra.Gateway.Api
 				.AddAiModelRegistryServices(this._config.GetSection("AiModelRegistryService")) // AI Model Registry
 			;
 
-			services
-				.AddScoped<IVersionInfoService, VersionInfoService>()
-				.AddUserSettingsServices()
-			;
+			services.AddScoped<IVersionInfoService, VersionInfoService>();
 
 
 			HealthCheckConfig healthCheckConfig = this._config.GetSection("HealthCheck").AsHealthCheckConfig();
@@ -143,7 +135,6 @@ namespace Terra.Gateway.Api
 				.UseAuthorization() //Authorization
 				.UseMiddleware(typeof(LogTrackingPrincipalMiddleware)) //Log Entry Middleware
 				.UseMiddleware(typeof(AccessTokenInterceptMiddleware)) //Bearer Authorization AccessToken interception
-				.UseMiddleware(typeof(UserSyncMiddleware)) //User sync to store and update request user
 				.UseEndpoints(endpoints => //Endpoints
 				{
 					endpoints.MapControllers();

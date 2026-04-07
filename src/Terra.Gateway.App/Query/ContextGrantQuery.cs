@@ -50,21 +50,11 @@ namespace Terra.Gateway.App.Query
 
 		public async Task<List<App.Common.Auth.ContextGrant>> CollectAsync()
 		{
-			String subjectId = await this._authorizationContentResolver.SubjectIdOfCurrentUser();
-			if (String.IsNullOrEmpty(subjectId)) return new List<Common.Auth.ContextGrant>();
-			Boolean isOwned = String.IsNullOrEmpty(this._subjectId) || subjectId.Equals(this._subjectId, StringComparison.OrdinalIgnoreCase);
-
 			List<App.Common.Auth.ContextGrant> grants = null;
-			if(isOwned) grants = await this._aaiService.LookupUserContextGrants(subjectId);
-			else
-			{
-				Boolean authorized = await this._authorizationService.Authorize(Permission.LookupContextGrantOther);
-				if(!authorized) return new List<Common.Auth.ContextGrant>();
-				grants = await this._aaiService.LookupUserContextGrants(this._subjectId);
-			}
+			Boolean authorized = await this._authorizationService.Authorize(Permission.LookupContextGrantOther);
+			if (!authorized) return new List<Common.Auth.ContextGrant>();
+			grants = await this._aaiService.LookupUserContextGrants(this._subjectId);
 
-			if (this._datasetIds != null) grants = grants.Where(x => x.TargetType == ContextGrant.TargetKind.Dataset && this._datasetIds.Contains(x.TargetId)).ToList();
-			if (this._collectionIds != null) grants = grants.Where(x => x.TargetType == ContextGrant.TargetKind.Collection && this._collectionIds.Contains(x.TargetId)).ToList();
 			if (this._targetKinds != null) grants = grants.Where(x => this._targetKinds.Contains(x.TargetType)).ToList();
 			if (this._roles != null)
 			{

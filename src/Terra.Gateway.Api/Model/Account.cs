@@ -3,7 +3,6 @@ using Cite.Tools.Common.Extensions;
 using Cite.Tools.FieldSet;
 using Cite.Tools.Logging;
 using Terra.Gateway.App.Authorization;
-using Terra.Gateway.App.Common.Auth;
 using System.Security.Claims;
 
 namespace Terra.Gateway.Api.Model
@@ -72,7 +71,7 @@ namespace Terra.Gateway.Api.Model
 			if(fields.HasField(nameof(Account.IsAuthenticated))) model.IsAuthenticated = isAuthenticated;
 			if(!isAuthenticated) return model;
 
-			if (fields.HasField(nameof(Account.UserId))) model.UserId = await this._authorizationContentResolver.CurrentUserId();
+			if (fields.HasField(nameof(Account.UserId))) model.UserId = Guid.Parse(this._authorizationContentResolver.CurrentUser());
 
 			IFieldSet principalFields = fields.ExtractPrefixed(nameof(Account.Principal).AsIndexerPrefix());
 			if (!principalFields.IsEmpty()) model.Principal = new Account.PrincipalInfo();
@@ -95,15 +94,6 @@ namespace Terra.Gateway.Api.Model
 			if (tokenFields.HasField(nameof(Account.Token.Scope))) model.Token.Scope = this._extractor.Scope(principal);
 
 			if (fields.HasField(nameof(Account.Permissions))) model.Permissions = new List<string>(this._permissionPolicyService.PermissionsOf(this._extractor.Roles(principal)));
-			if (fields.HasField(nameof(Account.DeferredPermissions)))
-			{
-				Guid? userId = _extractor.SubjectGuid(principal);
-				if (userId.HasValue)
-				{
-					List<string> datasetRoles = await _authorizationContentResolver.ContextRolesOf();
-					model.DeferredPermissions = new List<string>(_permissionPolicyService.PermissionsOfContext(datasetRoles));
-				}
-			}
 			if (fields.HasField(nameof(Account.Roles))) model.Roles = this._extractor.Roles(principal);
 
 			return model;
