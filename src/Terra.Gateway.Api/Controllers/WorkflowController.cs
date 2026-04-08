@@ -23,6 +23,7 @@ using Terra.Gateway.App.Model.Builder;
 using Terra.Gateway.App.Query;
 using Terra.Gateway.App.Service.AiModelRegistry;
 using Terra.Gateway.App.Service.Airflow;
+using Terra.Gateway.App.Service.Storage;
 
 namespace Terra.Gateway.Api.Controllers
 {
@@ -38,6 +39,8 @@ namespace Terra.Gateway.Api.Controllers
 		private readonly IStringLocalizer<Terra.Gateway.Resources.MySharedResources> _localizer;
 		private readonly IAirflowService _airflowService;
 		private readonly IAiModelRegistryService _aiModelRegistryService;
+		private readonly App.Authorization.IAuthorizationService _authorizationService;
+		private readonly IStorageService _storageService;
 
 		public WorkflowController(
 			ILogger<WorkflowController> logger,
@@ -48,7 +51,9 @@ namespace Terra.Gateway.Api.Controllers
 			IStringLocalizer<Terra.Gateway.Resources.MySharedResources> localizer,
 			ErrorThesaurus errors,
 			IAirflowService airflowService,
-			IAiModelRegistryService aiModelRegistryService
+			IAiModelRegistryService aiModelRegistryService,
+			App.Authorization.IAuthorizationService authorizationService,
+			IStorageService storageService
 			)
 		{
 			this._logger = logger;
@@ -60,6 +65,8 @@ namespace Terra.Gateway.Api.Controllers
 			this._builderFactory = builderFactory;
 			this._airflowService = airflowService;
 			this._aiModelRegistryService = aiModelRegistryService;
+			this._authorizationService = authorizationService;
+			this._storageService = storageService;
 		}
 
 		[Authorize]
@@ -325,6 +332,7 @@ namespace Terra.Gateway.Api.Controllers
 		}
 
 		[Authorize]
+		[ModelStateValidationFilter]
 		[SwaggerOperation(Summary = "Todo")]
 		[SwaggerResponse(statusCode: 200, description: "Todo")]
 		[SwaggerResponse(statusCode: 400, description: "Validation problem with the request")]
@@ -338,6 +346,14 @@ namespace Terra.Gateway.Api.Controllers
 		public async Task<IActionResult> Infer([FromForm] IFormFile file)
 		{
 			this._logger.Debug(new MapLogEntry("infer").And("model", file));
+			await this._authorizationService.AuthorizeForce(Permission.CanExecuteImageInference);
+			if (file == null) throw new DGValidationException("No file was provided");
+			List<string> allowedExtensions = await this._storageService.AllowedExtensions();
+			long allowedSize = await this._storageService.MaxFileUploadSize();
+			string extension = Path.GetExtension(file.FileName);
+			bool isAlloweExtension = allowedExtensions.Select(x => x.ToLowerInvariant()).Contains(extension.ToLowerInvariant());
+			if (file.Length > allowedSize || !isAlloweExtension) throw new DGValidationException(this._errors.UploadRestricted.Code, this._errors.UploadRestricted.Message);
+			
 			using var memoryStream = new MemoryStream();
 			await file.CopyToAsync(memoryStream);
 			var base64 = Convert.ToBase64String(memoryStream.ToArray());

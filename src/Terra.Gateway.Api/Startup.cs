@@ -1,34 +1,35 @@
-﻿using Cite.Tools.Json;
-using Terra.Gateway.App.ErrorCode;
-using Cite.WebTools.CurrentPrincipal.Extensions;
-using Terra.Gateway.App.Event;
-using Terra.Gateway.App.Formatting;
+﻿using Cite.Tools.Data.Builder.Extensions;
+using Cite.Tools.Data.Censor.Extensions;
+using Cite.Tools.Data.Deleter.Extensions;
+using Cite.Tools.Data.Query.Extensions;
+using Cite.Tools.Json;
+using Cite.Tools.Logging.Extensions;
+using Cite.Tools.Validation.Extensions;
 using Cite.WebTools.Cors.Extensions;
+using Cite.WebTools.CurrentPrincipal.Extensions;
+using Cite.WebTools.FieldSet;
+using Cite.WebTools.HostingEnvironment.Extensions;
 using Cite.WebTools.Localization.Extensions;
+using Serilog;
+using Terra.Gateway.Api.AccessToken;
 using Terra.Gateway.Api.Authorization;
 using Terra.Gateway.Api.Cache;
-using Terra.Gateway.Api.ForwardedHeaders;
-using Cite.WebTools.HostingEnvironment.Extensions;
-using Cite.Tools.Logging.Extensions;
 using Terra.Gateway.Api.Exception;
-using Terra.Gateway.App.LogTracking;
-using Terra.Gateway.Api.LogTracking;
-using Cite.WebTools.FieldSet;
+using Terra.Gateway.Api.ForwardedHeaders;
 using Terra.Gateway.Api.HealthCheck;
+using Terra.Gateway.Api.LogTracking;
 using Terra.Gateway.Api.Model;
-using Terra.Gateway.App.Accounting;
-using Serilog;
-using Cite.Tools.Data.Censor.Extensions;
-using Terra.Gateway.App.AccessToken;
-using Terra.Gateway.Api.AccessToken;
-using Cite.Tools.Data.Query.Extensions;
-using Cite.Tools.Data.Builder.Extensions;
-using Cite.Tools.Validation.Extensions;
 using Terra.Gateway.Api.OpenApi;
-using Cite.Tools.Data.Deleter.Extensions;
-using Terra.Gateway.App.Service.Version;
-using Terra.Gateway.App.Service.Airflow;
+using Terra.Gateway.App.AccessToken;
+using Terra.Gateway.App.Accounting;
+using Terra.Gateway.App.ErrorCode;
+using Terra.Gateway.App.Event;
+using Terra.Gateway.App.Formatting;
+using Terra.Gateway.App.LogTracking;
 using Terra.Gateway.App.Service.AiModelRegistry;
+using Terra.Gateway.App.Service.Airflow;
+using Terra.Gateway.App.Service.Storage;
+using Terra.Gateway.App.Service.Version;
 
 namespace Terra.Gateway.Api
 {
@@ -77,6 +78,7 @@ namespace Terra.Gateway.Api
 			services
 				.AddAirflowServices(this._config.GetSection("AirflowService")) //Airflow
 				.AddAiModelRegistryServices(this._config.GetSection("AiModelRegistryService")) // AI Model Registry
+				.AddStorageServices(this._config.GetSection("Storage")) // Storage
 			;
 
 			services.AddScoped<IVersionInfoService, VersionInfoService>();

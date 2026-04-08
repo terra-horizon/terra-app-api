@@ -1,0 +1,9 @@
+{
+  "Storage": {
+    "UploadRules": {
+      //50ΜΒ = 52428800 bytes
+      "MaxFileSize": 52428800,
+      "AllowedExtensions": [ ".png", ".jpeg", ".jpg" ]
+    }
+  }
+}
