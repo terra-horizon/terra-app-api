@@ -87,7 +87,7 @@ namespace Terra.Gateway.App.Query
 			if (this._workflowIds == null || this._workflowIds.Count != 1 || this._workflowExecutionIds == null || this._workflowExecutionIds.Count != 1 || this._taskIds == null || this._taskIds.Count != 1) return null;
 
 			String token = await this._airflowAccessTokenService.GetAirflowAccessTokenAsync();
-			if (token == null) throw new DGApplicationException(this._errors.TokenExchange.Code, this._errors.TokenExchange.Message);
+			if (token == null) throw new TerraApplicationException(this._errors.TokenExchange.Code, this._errors.TokenExchange.Message);
 
 			HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, $"{this._config.BaseUrl}{this._config.TaskInstanceByIdEndpoint.Replace("{workflowId}", this._workflowIds[0]).Replace("{executionId}", this._workflowExecutionIds[0]).Replace("{taskId}", this._taskIds[0])}");
 			request.Headers.Add(HeaderNames.Accept, "application/json");
@@ -102,7 +102,7 @@ namespace Terra.Gateway.App.Query
 			catch (System.Exception ex)
 			{
 				this._logger.Error(ex, "problem converting response {content}", content);
-				throw new DGUnderpinningException(this._errors.UnderpinningService.Code, this._errors.UnderpinningService.Message, null, UnderpinningServiceType.Workflow, this._logCorrelationScope.CorrelationId);
+				throw new TerraUnderpinningException(this._errors.UnderpinningService.Code, this._errors.UnderpinningService.Message, null, UnderpinningServiceType.Workflow, this._logCorrelationScope.CorrelationId);
 			}
 		}
 
@@ -121,7 +121,7 @@ namespace Terra.Gateway.App.Query
 		private async Task<Service.Airflow.Model.AirflowTaskInstanceList> CollectBaseAsync(Boolean useInCount)
 		{
 			String token = await this._airflowAccessTokenService.GetAirflowAccessTokenAsync();
-			if (token == null) throw new DGApplicationException(this._errors.TokenExchange.Code, this._errors.TokenExchange.Message);
+			if (token == null) throw new TerraApplicationException(this._errors.TokenExchange.Code, this._errors.TokenExchange.Message);
 
 			Service.Airflow.Model.AirflowTaskInstanceListRequest requestModel = new Service.Airflow.Model.AirflowTaskInstanceListRequest();
 			if (this._taskIds != null && this._taskIds.Count > 0) requestModel.TaskIds = this._taskIds.Select(x => x.ToString()).ToList();
@@ -228,7 +228,7 @@ namespace Terra.Gateway.App.Query
 			catch (System.Exception ex)
 			{
 				this._logger.Error(ex, "problem converting response {content}", content);
-				throw new DGUnderpinningException(this._errors.UnderpinningService.Code, this._errors.UnderpinningService.Message, null, UnderpinningServiceType.Workflow, this._logCorrelationScope.CorrelationId);
+				throw new TerraUnderpinningException(this._errors.UnderpinningService.Code, this._errors.UnderpinningService.Message, null, UnderpinningServiceType.Workflow, this._logCorrelationScope.CorrelationId);
 			}
 		}
 
@@ -239,7 +239,7 @@ namespace Terra.Gateway.App.Query
 			catch (System.Exception ex)
 			{
 				this._logger.Error(ex, $"could not complete the request. response was {response?.StatusCode}");
-				throw new DGUnderpinningException(this._errors.UnderpinningService.Code, this._errors.UnderpinningService.Message, (int?)response?.StatusCode, UnderpinningServiceType.Workflow, this._logCorrelationScope.CorrelationId);
+				throw new TerraUnderpinningException(this._errors.UnderpinningService.Code, this._errors.UnderpinningService.Message, (int?)response?.StatusCode, UnderpinningServiceType.Workflow, this._logCorrelationScope.CorrelationId);
 			}
 
 			try { response.EnsureSuccessStatusCode(); }
@@ -249,7 +249,7 @@ namespace Terra.Gateway.App.Query
 				try { errorPayload = await response.Content.ReadAsStringAsync(); } catch (System.Exception) { }
 				this._logger.Error(ex, "non successful response. StatusCode was {statusCode} and Payload {errorPayload}", response?.StatusCode, errorPayload);
 				Boolean includeErrorPayload = response != null && response.StatusCode == System.Net.HttpStatusCode.BadRequest;
-				throw new Exception.DGUnderpinningException(this._errors.UnderpinningService.Code, this._errors.UnderpinningService.Message, (int?)response?.StatusCode, UnderpinningServiceType.Workflow, this._logCorrelationScope.CorrelationId, includeErrorPayload ? errorPayload : null);
+				throw new Exception.TerraUnderpinningException(this._errors.UnderpinningService.Code, this._errors.UnderpinningService.Message, (int?)response?.StatusCode, UnderpinningServiceType.Workflow, this._logCorrelationScope.CorrelationId, includeErrorPayload ? errorPayload : null);
 			}
 			String content = await response.Content.ReadAsStringAsync();
 			return content;

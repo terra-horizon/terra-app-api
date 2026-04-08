@@ -90,7 +90,7 @@ namespace Terra.Gateway.Api.Controllers
 			this._logger.Debug(new MapLogEntry("query").And("type", nameof(App.Model.WorkflowDefinition)).And("lookup", lookup));
 
 			IFieldSet censoredFields = await this._censorFactory.Censor<WorkflowDefinitionCensor>().Censor(lookup.Project, CensorContext.AsCensor());
-			if (lookup.Project.CensoredAsUnauthorized(censoredFields)) throw new DGForbiddenException(this._errors.Forbidden.Code, this._errors.Forbidden.Message);
+			if (lookup.Project.CensoredAsUnauthorized(censoredFields)) throw new TerraForbiddenException(this._errors.Forbidden.Code, this._errors.Forbidden.Message);
 
 			WorkflowDefinitionHttpQuery query = lookup.Enrich(this._queryFactory);
 			List<App.Service.Airflow.Model.AirflowDag> datas = await query.CollectAsync();
@@ -126,12 +126,12 @@ namespace Terra.Gateway.Api.Controllers
 			this._logger.Debug(new MapLogEntry("get").And("type", nameof(App.Model.WorkflowDefinition)).And("id", id).And("fields", fieldSet));
 
 			IFieldSet censoredFields = await this._censorFactory.Censor<WorkflowDefinitionCensor>().Censor(fieldSet, CensorContext.AsCensor());
-			if (fieldSet.CensoredAsUnauthorized(censoredFields)) throw new DGForbiddenException(this._errors.Forbidden.Code, this._errors.Forbidden.Message);
+			if (fieldSet.CensoredAsUnauthorized(censoredFields)) throw new TerraForbiddenException(this._errors.Forbidden.Code, this._errors.Forbidden.Message);
 
 			WorkflowDefinitionHttpQuery query = this._queryFactory.Query<WorkflowDefinitionHttpQuery>().Id(id);
 			App.Service.Airflow.Model.AirflowDag data = await query.ByIdAsync();
 			App.Model.WorkflowDefinition model = await this._builderFactory.Builder<WorkflowDefinitionBuilder>().Authorize(AuthorizationFlags.Any).Build(censoredFields, data);
-			if (model == null) throw new DGNotFoundException(this._localizer["general_notFound", id, nameof(App.Model.WorkflowDefinition)]);
+			if (model == null) throw new TerraNotFoundException(this._localizer["general_notFound", id, nameof(App.Model.WorkflowDefinition)]);
 
 			this._accountingService.AccountFor(KnownActions.Query, KnownResources.Workflow.AsAccountable());
 
@@ -165,12 +165,12 @@ namespace Terra.Gateway.Api.Controllers
 			this._logger.Debug(new MapLogEntry("get").And("type", nameof(App.Model.WorkflowDefinition)).And("workflowId", workflowId).And("executionId", executionId).And("fields", fieldSet));
 
 			IFieldSet censoredFields = await this._censorFactory.Censor<WorkflowExecutionCensor>().Censor(fieldSet, CensorContext.AsCensor());
-			if (fieldSet.CensoredAsUnauthorized(censoredFields)) throw new DGForbiddenException(this._errors.Forbidden.Code, this._errors.Forbidden.Message);
+			if (fieldSet.CensoredAsUnauthorized(censoredFields)) throw new TerraForbiddenException(this._errors.Forbidden.Code, this._errors.Forbidden.Message);
 
 			WorkflowExecutionHttpQuery query = this._queryFactory.Query<WorkflowExecutionHttpQuery>().Id(executionId).WorkflowIds(workflowId);
 			App.Service.Airflow.Model.AirflowDagExecution data = await query.ByIdAsync();
 			App.Model.WorkflowExecution model = await this._builderFactory.Builder<WorkflowExecutionBuilder>().Authorize(AuthorizationFlags.Any).Build(censoredFields, data);
-			if (model == null) throw new DGNotFoundException(this._localizer["general_notFound", executionId, nameof(App.Model.WorkflowExecution)]);
+			if (model == null) throw new TerraNotFoundException(this._localizer["general_notFound", executionId, nameof(App.Model.WorkflowExecution)]);
 
 			this._accountingService.AccountFor(KnownActions.Query, KnownResources.Workflow.AsAccountable());
 
@@ -198,7 +198,7 @@ namespace Terra.Gateway.Api.Controllers
 			this._logger.Debug(new MapLogEntry("query").And("type", nameof(App.Model.WorkflowExecution)).And("lookup", lookup));
 
 			IFieldSet censoredFields = await this._censorFactory.Censor<WorkflowExecutionCensor>().Censor(lookup.Project, CensorContext.AsCensor());
-			if (lookup.Project.CensoredAsUnauthorized(censoredFields)) throw new DGForbiddenException(this._errors.Forbidden.Code, this._errors.Forbidden.Message);
+			if (lookup.Project.CensoredAsUnauthorized(censoredFields)) throw new TerraForbiddenException(this._errors.Forbidden.Code, this._errors.Forbidden.Message);
 
 			WorkflowExecutionHttpQuery query = lookup.Enrich(this._queryFactory);
 			List<App.Service.Airflow.Model.AirflowDagExecution> datas = await query.CollectAsync();
@@ -240,12 +240,12 @@ namespace Terra.Gateway.Api.Controllers
 			this._logger.Debug(new MapLogEntry("get").And("type", nameof(App.Model.WorkflowTaskInstance)).And("workflowId", workflowId).And("executionId", executionId).And("taskId", taskId).And("fields", fieldSet));
 
 			IFieldSet censoredFields = await this._censorFactory.Censor<WorkflowTaskInstanceCensor>().Censor(fieldSet, CensorContext.AsCensor());
-			if (fieldSet.CensoredAsUnauthorized(censoredFields)) throw new DGForbiddenException(this._errors.Forbidden.Code, this._errors.Forbidden.Message);
+			if (fieldSet.CensoredAsUnauthorized(censoredFields)) throw new TerraForbiddenException(this._errors.Forbidden.Code, this._errors.Forbidden.Message);
 
 			WorkflowTaskInstanceHttpQuery query = this._queryFactory.Query<WorkflowTaskInstanceHttpQuery>().WorkflowIds(workflowId).WorkflowExecutionIds(executionId).TaskIds(taskId);
 			App.Service.Airflow.Model.AirflowTaskInstance data = await query.ByIdAsync();
 			App.Model.WorkflowTaskInstance model = await this._builderFactory.Builder<WorkflowTaskInstanceBuilder>().Authorize(AuthorizationFlags.Any).Build(censoredFields, data);
-			if (model == null) throw new DGNotFoundException(this._localizer["general_notFound", taskId, nameof(App.Model.WorkflowTaskInstance)]);
+			if (model == null) throw new TerraNotFoundException(this._localizer["general_notFound", taskId, nameof(App.Model.WorkflowTaskInstance)]);
 
 			this._accountingService.AccountFor(KnownActions.Query, KnownResources.Workflow.AsAccountable());
 
@@ -285,7 +285,7 @@ namespace Terra.Gateway.Api.Controllers
 			this._logger.Debug(new MapLogEntry("get").And("type", nameof(App.Model.WorkflowTaskLog)).And("tryNumber", tryNumber).And("taskId", workflowTaskId).And("dagId", workflowId).And("dagRunId", workflowExecutionId).And("fields", fieldSet));
 
 			IFieldSet censoredFields = await this._censorFactory.Censor<WorkflowTaskLogsCensor>().Censor(fieldSet, CensorContext.AsCensor());
-			if (fieldSet.CensoredAsUnauthorized(censoredFields)) throw new DGForbiddenException(this._errors.Forbidden.Code, this._errors.Forbidden.Message);
+			if (fieldSet.CensoredAsUnauthorized(censoredFields)) throw new TerraForbiddenException(this._errors.Forbidden.Code, this._errors.Forbidden.Message);
 
 			WorkflowTaskLogsHttpQuery query = this._queryFactory.Query<WorkflowTaskLogsHttpQuery>().TryNumber(tryNumber).WorkflowTaskId(workflowTaskId).WorkflowId(workflowId).WorkflowExecutionId(workflowExecutionId);
 			List<App.Service.Airflow.Model.AirflowTaskLog> datas = await query.ByIdAsync();
@@ -322,7 +322,7 @@ namespace Terra.Gateway.Api.Controllers
 			this._logger.Debug(new MapLogEntry("rerun").And("type", nameof(App.Model.TaskInstanceDownstreamExecutionArgs)).And("model", model).And("fields", fieldSet));
 
 			IFieldSet censoredFields = await this._censorFactory.Censor<WorkflowTaskInstanceCensor>().Censor(fieldSet, CensorContext.AsCensor());
-			if (fieldSet.CensoredAsUnauthorized(censoredFields)) throw new DGForbiddenException(this._errors.Forbidden.Code, this._errors.Forbidden.Message);
+			if (fieldSet.CensoredAsUnauthorized(censoredFields)) throw new TerraForbiddenException(this._errors.Forbidden.Code, this._errors.Forbidden.Message);
 
 			List<App.Model.WorkflowTaskInstance> response = await this._airflowService.ReRunWorkflowTasksAsync(model, censoredFields);
 
@@ -347,12 +347,12 @@ namespace Terra.Gateway.Api.Controllers
 		{
 			this._logger.Debug(new MapLogEntry("infer").And("model", file));
 			await this._authorizationService.AuthorizeForce(Permission.CanExecuteImageInference);
-			if (file == null) throw new DGValidationException("No file was provided");
+			if (file == null) throw new TerraValidationException("No file was provided");
 			List<string> allowedExtensions = await this._storageService.AllowedExtensions();
 			long allowedSize = await this._storageService.MaxFileUploadSize();
 			string extension = Path.GetExtension(file.FileName);
 			bool isAlloweExtension = allowedExtensions.Select(x => x.ToLowerInvariant()).Contains(extension.ToLowerInvariant());
-			if (file.Length > allowedSize || !isAlloweExtension) throw new DGValidationException(this._errors.UploadRestricted.Code, this._errors.UploadRestricted.Message);
+			if (file.Length > allowedSize || !isAlloweExtension) throw new TerraValidationException(this._errors.UploadRestricted.Code, this._errors.UploadRestricted.Message);
 			
 			using var memoryStream = new MemoryStream();
 			await file.CopyToAsync(memoryStream);

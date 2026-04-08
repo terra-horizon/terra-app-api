@@ -63,7 +63,7 @@ namespace Terra.Gateway.App.AccessToken
 			catch (System.Exception ex)
 			{
 				this._logger.Error(ex, $"could not complete the request. response was {response?.StatusCode}");
-				throw new DGUnderpinningException(this._errors.UnderpinningService.Code, this._errors.UnderpinningService.Message, (int?)response?.StatusCode, UnderpinningServiceType.AAI, this._logCorrelationScope.CorrelationId);
+				throw new TerraUnderpinningException(this._errors.UnderpinningService.Code, this._errors.UnderpinningService.Message, (int?)response?.StatusCode, UnderpinningServiceType.AAI, this._logCorrelationScope.CorrelationId);
 			}
 
 			try { response.EnsureSuccessStatusCode(); }
@@ -73,7 +73,7 @@ namespace Terra.Gateway.App.AccessToken
 				try { errorPayload = await response.Content.ReadAsStringAsync(); } catch (System.Exception) { }
 				this._logger.Error(ex, "non successful response. StatusCode was {statusCode} and Payload {errorPayload}", response?.StatusCode, errorPayload);
 				Boolean includeErrorPayload = response != null && response.StatusCode == System.Net.HttpStatusCode.BadRequest;
-				throw new Exception.DGUnderpinningException(this._errors.UnderpinningService.Code, this._errors.UnderpinningService.Message, (int?)response?.StatusCode, UnderpinningServiceType.AAI, this._logCorrelationScope.CorrelationId, includeErrorPayload ? errorPayload : null);
+				throw new Exception.TerraUnderpinningException(this._errors.UnderpinningService.Code, this._errors.UnderpinningService.Message, (int?)response?.StatusCode, UnderpinningServiceType.AAI, this._logCorrelationScope.CorrelationId, includeErrorPayload ? errorPayload : null);
 			}
 
 			String content = await response.Content.ReadAsStringAsync();
@@ -136,7 +136,7 @@ namespace Terra.Gateway.App.AccessToken
 			catch (System.Exception ex)
 			{
 				this._logger.Error(ex, $"could not complete the request. response was {response?.StatusCode}");
-				throw new DGUnderpinningException(this._errors.UnderpinningService.Code, this._errors.UnderpinningService.Message, (int?)response?.StatusCode, UnderpinningServiceType.AAI, this._logCorrelationScope.CorrelationId);
+				throw new TerraUnderpinningException(this._errors.UnderpinningService.Code, this._errors.UnderpinningService.Message, (int?)response?.StatusCode, UnderpinningServiceType.AAI, this._logCorrelationScope.CorrelationId);
 			}
 
 			try { response.EnsureSuccessStatusCode(); }
@@ -146,7 +146,7 @@ namespace Terra.Gateway.App.AccessToken
 				try { errorPayload = await response.Content.ReadAsStringAsync(); } catch (System.Exception) { }
 				this._logger.Error(ex, "non successful response. StatusCode was {statusCode} and Payload {errorPayload}", response?.StatusCode, errorPayload);
 				Boolean includeErrorPayload = response != null && response.StatusCode == System.Net.HttpStatusCode.BadRequest;
-				throw new Exception.DGUnderpinningException(this._errors.UnderpinningService.Code, this._errors.UnderpinningService.Message, (int?)response?.StatusCode, UnderpinningServiceType.AAI, this._logCorrelationScope.CorrelationId, includeErrorPayload ? errorPayload : null);
+				throw new Exception.TerraUnderpinningException(this._errors.UnderpinningService.Code, this._errors.UnderpinningService.Message, (int?)response?.StatusCode, UnderpinningServiceType.AAI, this._logCorrelationScope.CorrelationId, includeErrorPayload ? errorPayload : null);
 			}
 
 			String content = await response.Content.ReadAsStringAsync();

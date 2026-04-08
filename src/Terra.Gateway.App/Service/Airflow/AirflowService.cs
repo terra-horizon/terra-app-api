@@ -54,7 +54,7 @@ namespace Terra.Gateway.App.Service.Airflow
 			await this._authorizationService.AuthorizeForce(Permission.RerunWorkflowTask);
 
 			String token = await this._airflowAccessTokenService.GetAirflowAccessTokenAsync();
-			if (token == null) throw new DGApplicationException(this._errors.TokenExchange.Code, this._errors.TokenExchange.Message);
+			if (token == null) throw new TerraApplicationException(this._errors.TokenExchange.Code, this._errors.TokenExchange.Message);
 			Service.Airflow.Model.AirflowClearTaskInstanceRequest httpRequestModel = new Service.Airflow.Model.AirflowClearTaskInstanceRequest
 			{
 				DryRun = false,
@@ -77,7 +77,7 @@ namespace Terra.Gateway.App.Service.Airflow
 			catch (System.Exception ex)
 			{
 				this._logger.LogError(ex, "Failed to parse response: {content}", content);
-				throw new DGUnderpinningException(this._errors.UnderpinningService.Code, this._errors.UnderpinningService.Message, null, UnderpinningServiceType.Workflow, this._logCorrelationScope.CorrelationId);
+				throw new TerraUnderpinningException(this._errors.UnderpinningService.Code, this._errors.UnderpinningService.Message, null, UnderpinningServiceType.Workflow, this._logCorrelationScope.CorrelationId);
 			}
 
 			List<WorkflowTaskInstance> result = await this._builderFactory.Builder<App.Model.Builder.WorkflowTaskInstanceBuilder>().Authorize(AuthorizationFlags.Any).Build(fields, rawResponse);
@@ -90,7 +90,7 @@ namespace Terra.Gateway.App.Service.Airflow
 			//GOTCHA: No authorization applied at this level. Permissions must be checked prior to calling airflow execute
 
 			String token = await this._airflowAccessTokenService.GetAirflowAccessTokenAsync();
-			if (token == null) throw new DGApplicationException(this._errors.TokenExchange.Code, this._errors.TokenExchange.Message);
+			if (token == null) throw new TerraApplicationException(this._errors.TokenExchange.Code, this._errors.TokenExchange.Message);
 
 			Service.Airflow.Model.AirflowExecutionRequest httpRequestModel = new Service.Airflow.Model.AirflowExecutionRequest
 			{
@@ -113,7 +113,7 @@ namespace Terra.Gateway.App.Service.Airflow
 			catch (System.Exception ex)
 			{
 				this._logger.LogError(ex, "Failed to parse response: {content}", content);
-				throw new DGUnderpinningException(this._errors.UnderpinningService.Code, this._errors.UnderpinningService.Message, null, UnderpinningServiceType.Workflow, this._logCorrelationScope.CorrelationId);
+				throw new TerraUnderpinningException(this._errors.UnderpinningService.Code, this._errors.UnderpinningService.Message, null, UnderpinningServiceType.Workflow, this._logCorrelationScope.CorrelationId);
 			}
 			
 			WorkflowExecution result = await this._builderFactory.Builder<App.Model.Builder.WorkflowExecutionBuilder>().Authorize(AuthorizationFlags.Any).Build(fieldset, rawResponse);
@@ -128,7 +128,7 @@ namespace Terra.Gateway.App.Service.Airflow
 			catch (System.Exception ex)
 			{
 				this._logger.Error(ex, $"could not complete the request,the response was {response?.StatusCode}");
-				throw new DGUnderpinningException(this._errors.UnderpinningService.Code, this._errors.UnderpinningService.Message, (int?)response?.StatusCode, UnderpinningServiceType.Workflow, this._logCorrelationScope.CorrelationId);
+				throw new TerraUnderpinningException(this._errors.UnderpinningService.Code, this._errors.UnderpinningService.Message, (int?)response?.StatusCode, UnderpinningServiceType.Workflow, this._logCorrelationScope.CorrelationId);
 			}
 
 			try { response.EnsureSuccessStatusCode(); }
@@ -138,7 +138,7 @@ namespace Terra.Gateway.App.Service.Airflow
 				try { errorPayload = await response.Content.ReadAsStringAsync(); } catch (System.Exception) { }
 				this._logger.Error(ex, "non successful response. StatusCode was {statusCode} and Payload {errorPayload}", response?.StatusCode, errorPayload);
 				Boolean includeErrorPayload = response != null && response.StatusCode == System.Net.HttpStatusCode.BadRequest;
-				throw new Exception.DGUnderpinningException(this._errors.UnderpinningService.Code, this._errors.UnderpinningService.Message, (int?)response?.StatusCode, UnderpinningServiceType.Workflow, this._logCorrelationScope.CorrelationId, includeErrorPayload ? errorPayload : null);
+				throw new Exception.TerraUnderpinningException(this._errors.UnderpinningService.Code, this._errors.UnderpinningService.Message, (int?)response?.StatusCode, UnderpinningServiceType.Workflow, this._logCorrelationScope.CorrelationId, includeErrorPayload ? errorPayload : null);
 			}
 			String content = await response.Content.ReadAsStringAsync();
 			return content;

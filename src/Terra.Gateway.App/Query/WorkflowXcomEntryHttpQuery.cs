@@ -63,7 +63,7 @@ namespace Terra.Gateway.App.Query
 			if(String.IsNullOrEmpty(this._taskId) || String.IsNullOrEmpty(this._workflowId) || String.IsNullOrEmpty(this._workflowExecutionId) || String.IsNullOrEmpty(this._xComKey)) return null;
 
 			String token = await this._airflowAccessTokenService.GetAirflowAccessTokenAsync();
-			if (token == null) throw new DGApplicationException(this._errors.TokenExchange.Code, this._errors.TokenExchange.Message);
+			if (token == null) throw new TerraApplicationException(this._errors.TokenExchange.Code, this._errors.TokenExchange.Message);
 
 			HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, $"{this._config.BaseUrl}{this._config.XComByIdEndpoint
 				.Replace("{workflowId}", this._workflowId )
@@ -82,7 +82,7 @@ namespace Terra.Gateway.App.Query
 			catch (System.Exception ex)
 			{
 				this._logger.Error(ex, "problem converting response {content}", content);
-				throw new DGUnderpinningException(this._errors.UnderpinningService.Code, this._errors.UnderpinningService.Message, null, UnderpinningServiceType.Workflow, this._logCorrelationScope.CorrelationId);
+				throw new TerraUnderpinningException(this._errors.UnderpinningService.Code, this._errors.UnderpinningService.Message, null, UnderpinningServiceType.Workflow, this._logCorrelationScope.CorrelationId);
 			}
 		}
 
@@ -101,7 +101,7 @@ namespace Terra.Gateway.App.Query
 		private async Task<Service.Airflow.Model.AirflowXcomEntryList> CollectBaseAsync(Boolean useInCount)
 		{
 			String token = await this._airflowAccessTokenService.GetAirflowAccessTokenAsync();
-			if (token == null) throw new DGApplicationException(this._errors.TokenExchange.Code, this._errors.TokenExchange.Message);
+			if (token == null) throw new TerraApplicationException(this._errors.TokenExchange.Code, this._errors.TokenExchange.Message);
 
 			QueryString qs = new QueryString();
 			if (!String.IsNullOrEmpty(this._xComKey)) qs = qs.Add("xcom_key", this._xComKey);
@@ -134,7 +134,7 @@ namespace Terra.Gateway.App.Query
 			catch (System.Exception ex)
 			{
 				this._logger.Error(ex, "problem converting response {content}", content);
-				throw new DGUnderpinningException(this._errors.UnderpinningService.Code, this._errors.UnderpinningService.Message, null, UnderpinningServiceType.Workflow, this._logCorrelationScope.CorrelationId);
+				throw new TerraUnderpinningException(this._errors.UnderpinningService.Code, this._errors.UnderpinningService.Message, null, UnderpinningServiceType.Workflow, this._logCorrelationScope.CorrelationId);
 			}
 		}
 
@@ -145,7 +145,7 @@ namespace Terra.Gateway.App.Query
 			catch (System.Exception ex)
 			{
 				this._logger.Error(ex, $"could not complete the request. response was {response?.StatusCode}");
-				throw new DGUnderpinningException(this._errors.UnderpinningService.Code, this._errors.UnderpinningService.Message, (int?)response?.StatusCode, UnderpinningServiceType.Workflow, this._logCorrelationScope.CorrelationId);
+				throw new TerraUnderpinningException(this._errors.UnderpinningService.Code, this._errors.UnderpinningService.Message, (int?)response?.StatusCode, UnderpinningServiceType.Workflow, this._logCorrelationScope.CorrelationId);
 			}
 
 			try { response.EnsureSuccessStatusCode(); }
@@ -155,7 +155,7 @@ namespace Terra.Gateway.App.Query
 				try { errorPayload = await response.Content.ReadAsStringAsync(); } catch (System.Exception) { }
 				this._logger.Error(ex, "non successful response. StatusCode was {statusCode} and Payload {errorPayload}", response?.StatusCode, errorPayload);
 				Boolean includeErrorPayload = response != null && response.StatusCode == System.Net.HttpStatusCode.BadRequest;
-				throw new Exception.DGUnderpinningException(this._errors.UnderpinningService.Code, this._errors.UnderpinningService.Message, (int?)response?.StatusCode, UnderpinningServiceType.Workflow, this._logCorrelationScope.CorrelationId, includeErrorPayload ? errorPayload : null);
+				throw new Exception.TerraUnderpinningException(this._errors.UnderpinningService.Code, this._errors.UnderpinningService.Message, (int?)response?.StatusCode, UnderpinningServiceType.Workflow, this._logCorrelationScope.CorrelationId, includeErrorPayload ? errorPayload : null);
 			}
 			String content = await response.Content.ReadAsStringAsync();
 			return content;

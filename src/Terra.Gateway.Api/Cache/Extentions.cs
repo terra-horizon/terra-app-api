@@ -23,7 +23,7 @@ namespace Terra.Gateway.Api.Cache
                         services.AddDistributedMemoryCache();
                         break;
                     }
-                default: throw new DGApplicationException($"unrecognized cache provider type {type}");
+                default: throw new TerraApplicationException($"unrecognized cache provider type {type}");
             }
 
             return services;

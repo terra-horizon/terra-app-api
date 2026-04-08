@@ -38,7 +38,6 @@
 	  <Folder Include="Common\" />
 	  <Folder Include="ErrorCode\" />
 	  <Folder Include="Event\" />
-	  <Folder Include="Exception\" />
 	  <Folder Include="Formatting\" />
 	  <Folder Include="LogTracking\" />
 	  <Folder Include="Model\" />

@@ -63,7 +63,7 @@ namespace Terra.Gateway.App.Service.Airflow
 			catch (System.Exception ex)
 			{
 				this._logger.Error(ex, $"could not complete the request. response was {httpResponse?.StatusCode}");
-				throw new DGUnderpinningException(this._errors.UnderpinningService.Code, this._errors.UnderpinningService.Message, (int?)httpResponse?.StatusCode, UnderpinningServiceType.Workflow, this._logCorrelationScope.CorrelationId);
+				throw new TerraUnderpinningException(this._errors.UnderpinningService.Code, this._errors.UnderpinningService.Message, (int?)httpResponse?.StatusCode, UnderpinningServiceType.Workflow, this._logCorrelationScope.CorrelationId);
 			}
 
 			try { httpResponse.EnsureSuccessStatusCode(); }
@@ -73,7 +73,7 @@ namespace Terra.Gateway.App.Service.Airflow
 				try { errorPayload = await httpResponse.Content.ReadAsStringAsync(); } catch (System.Exception) { }
 				this._logger.Error(ex, "non successful response. StatusCode was {statusCode} and Payload {errorPayload}", httpResponse?.StatusCode, errorPayload);
 				Boolean includeErrorPayload = httpResponse != null && httpResponse.StatusCode == System.Net.HttpStatusCode.BadRequest;
-				throw new Exception.DGUnderpinningException(this._errors.UnderpinningService.Code, this._errors.UnderpinningService.Message, (int?)httpResponse?.StatusCode, UnderpinningServiceType.Workflow, this._logCorrelationScope.CorrelationId, includeErrorPayload ? errorPayload : null);
+				throw new Exception.TerraUnderpinningException(this._errors.UnderpinningService.Code, this._errors.UnderpinningService.Message, (int?)httpResponse?.StatusCode, UnderpinningServiceType.Workflow, this._logCorrelationScope.CorrelationId, includeErrorPayload ? errorPayload : null);
 			}
 
 			String content = await httpResponse.Content.ReadAsStringAsync();

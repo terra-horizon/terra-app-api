@@ -29,7 +29,7 @@ namespace Terra.Gateway.App.Common.Validation
 			if (this.Validate(item).Result.IsValid) return;
 			List<KeyValuePair<string, List<string>>> errors = this.FlattenValidationResult().Select(x => new KeyValuePair<string, List<string>>(x.Key, x.Value)).ToList();
 			this._logger.Debug(new DataLogEntry("validation failed", errors));
-			throw new DGValidationException(this._errors.ModelValidation.Code, errors);
+			throw new TerraValidationException(this._errors.ModelValidation.Code, errors);
 		}
 
 		protected Boolean IsValidId(int? id)

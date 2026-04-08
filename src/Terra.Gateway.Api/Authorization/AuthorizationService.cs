@@ -118,7 +118,7 @@ namespace Terra.Gateway.Api.Authorization
 			LogLevel level = result.Succeeded ? LogLevel.Trace : (force ? LogLevel.Warning : LogLevel.Trace);
 			this._logger.LogSafe(level, new MapLogEntry("checking current principal").And("policy", policy).And("resource", resource).And("success", result.Succeeded).And("force", force));
 
-			if (!result.Succeeded && force) throw new DGForbiddenException(this._errors.Forbidden.Code, this._errors.Forbidden.Message);
+			if (!result.Succeeded && force) throw new TerraForbiddenException(this._errors.Forbidden.Code, this._errors.Forbidden.Message);
 			return result.Succeeded;
 		}
 	}

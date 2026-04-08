@@ -65,8 +65,8 @@ namespace Terra.Gateway.App.Service.AiModelRegistry
 				.ExcludeStaled(true)
 				.CollectAsync();
 
-			if (definitions == null || definitions.Count == 0) throw new DGNotFoundException(this._localizer["general_notFound", Common.WorkflowDefinitionKind.AiModelRegistryInference.ToString(), nameof(Model.WorkflowDefinition)]);
-			if (definitions.Count > 1) throw new DGFoundManyException(this._localizer["general_nonUnique", Common.WorkflowDefinitionKind.AiModelRegistryInference.ToString(), nameof(Model.WorkflowDefinition)]);
+			if (definitions == null || definitions.Count == 0) throw new TerraNotFoundException(this._localizer["general_notFound", Common.WorkflowDefinitionKind.AiModelRegistryInference.ToString(), nameof(Model.WorkflowDefinition)]);
+			if (definitions.Count > 1) throw new TerraFoundManyException(this._localizer["general_nonUnique", Common.WorkflowDefinitionKind.AiModelRegistryInference.ToString(), nameof(Model.WorkflowDefinition)]);
 			Airflow.Model.AirflowDag selectedDefinition = definitions.FirstOrDefault();
 			_ = await this._airflowService.ExecuteWorkflowAsync(new Model.WorkflowExecutionArgs
 			{

@@ -34,7 +34,7 @@ namespace Terra.Gateway.Api.Validation
 						x.Key, 
 						(this._sensitiveKeys == null || !this._sensitiveKeys.Contains(x.Key)) ? x.Value.Errors.Select(y => y.ErrorMessage).ToList() : null)).ToList();
 
-				throw new DGValidationException("unsucessful model binding", errors);
+				throw new TerraValidationException("unsucessful model binding", errors);
 			}
 		}
 	}

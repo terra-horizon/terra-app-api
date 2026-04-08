@@ -49,56 +49,56 @@ namespace Terra.Gateway.Api.Exception
             object result;
             LogLevel logLevel;
 
-            if (exception is DGNotFoundException)
+            if (exception is TerraNotFoundException)
             {
                 logLevel = LogLevel.Debug;
                 statusCode = HttpStatusCode.NotFound;
 
-                int code = ((DGNotFoundException)exception).Code;
+                int code = ((TerraNotFoundException)exception).Code;
                 if (code > 0) result = new { code, error = exception.Message };
                 else result = new { error = exception.Message };
             }
-            else if (exception is DGForbiddenException)
+            else if (exception is TerraForbiddenException)
             {
                 logLevel = LogLevel.Debug;
                 statusCode = HttpStatusCode.Forbidden;
 
-                int code = ((DGForbiddenException)exception).Code;
+                int code = ((TerraForbiddenException)exception).Code;
                 if (code > 0) result = new { code, error = exception.Message };
                 else result = new { error = exception.Message };
             }
-			else if (exception is DGUnderpinningException)
+			else if (exception is TerraUnderpinningException)
 			{
 				logLevel = LogLevel.Error;
 				statusCode = HttpStatusCode.FailedDependency;
 
                 var payload = new
                 {
-                    statusCode = ((DGUnderpinningException)exception).ErrorStatusCode,
-                    source = ((DGUnderpinningException)exception).ErrorSource?.ToString(),
-                    correlationId = ((DGUnderpinningException)exception).CorrelationId,
-                    payload = ((DGUnderpinningException)exception).ResponsePayload,
+                    statusCode = ((TerraUnderpinningException)exception).ErrorStatusCode,
+                    source = ((TerraUnderpinningException)exception).ErrorSource?.ToString(),
+                    correlationId = ((TerraUnderpinningException)exception).CorrelationId,
+                    payload = ((TerraUnderpinningException)exception).ResponsePayload,
 				};
 
-				int code = ((DGUnderpinningException)exception).Code;
+				int code = ((TerraUnderpinningException)exception).Code;
 				if (code > 0) result = new { code, error = exception.Message, message = payload };
 				else result = new { error = exception.Message, message = payload };
 			}
-			else if (exception is DGValidationException)
+			else if (exception is TerraValidationException)
             {
                 logLevel = LogLevel.Debug;
                 statusCode = HttpStatusCode.BadRequest;
 
-                int code = ((DGValidationException)exception).Code;
-                if (code > 0) result = new { code, error = exception.Message, message = ((DGValidationException)exception).Errors };
-                else result = new { error = exception.Message, message = ((DGValidationException)exception).Errors };
+                int code = ((TerraValidationException)exception).Code;
+                if (code > 0) result = new { code, error = exception.Message, message = ((TerraValidationException)exception).Errors };
+                else result = new { error = exception.Message, message = ((TerraValidationException)exception).Errors };
             }
-            else if (exception is DGApplicationException)
+            else if (exception is TerraApplicationException)
             {
                 logLevel = LogLevel.Error;
                 statusCode = HttpStatusCode.InternalServerError;
 
-                int code = ((DGApplicationException)exception).Code;
+                int code = ((TerraApplicationException)exception).Code;
                 if (code > 0) result = new { code, error = exception.Message };
                 else result = new { error = exception.Message };
             }
