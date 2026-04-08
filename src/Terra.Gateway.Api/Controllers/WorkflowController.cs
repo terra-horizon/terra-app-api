@@ -5,6 +5,10 @@ using Cite.Tools.FieldSet;
 using Cite.Tools.Logging;
 using Cite.Tools.Logging.Extensions;
 using Cite.WebTools.Validation;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
+using Swashbuckle.AspNetCore.Annotations;
 using Terra.Gateway.Api.Model;
 using Terra.Gateway.Api.Model.Lookup;
 using Terra.Gateway.Api.OpenApi;
@@ -17,11 +21,8 @@ using Terra.Gateway.App.ErrorCode;
 using Terra.Gateway.App.Exception;
 using Terra.Gateway.App.Model.Builder;
 using Terra.Gateway.App.Query;
+using Terra.Gateway.App.Service.AiModelRegistry;
 using Terra.Gateway.App.Service.Airflow;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Localization;
-using Swashbuckle.AspNetCore.Annotations;
 
 namespace Terra.Gateway.Api.Controllers
 {
@@ -36,6 +37,7 @@ namespace Terra.Gateway.Api.Controllers
 		private readonly IAccountingService _accountingService;
 		private readonly IStringLocalizer<Terra.Gateway.Resources.MySharedResources> _localizer;
 		private readonly IAirflowService _airflowService;
+		private readonly IAiModelRegistryService _aiModelRegistryService;
 
 		public WorkflowController(
 			ILogger<WorkflowController> logger,
@@ -45,7 +47,8 @@ namespace Terra.Gateway.Api.Controllers
 			IAccountingService accountingService,
 			IStringLocalizer<Terra.Gateway.Resources.MySharedResources> localizer,
 			ErrorThesaurus errors,
-			IAirflowService airflowService
+			IAirflowService airflowService,
+			IAiModelRegistryService aiModelRegistryService
 			)
 		{
 			this._logger = logger;
@@ -56,6 +59,7 @@ namespace Terra.Gateway.Api.Controllers
 			this._censorFactory = censorFactory;
 			this._builderFactory = builderFactory;
 			this._airflowService = airflowService;
+			this._aiModelRegistryService = aiModelRegistryService;
 		}
 
 		[Authorize]
@@ -320,5 +324,29 @@ namespace Terra.Gateway.Api.Controllers
 			return response;
 		}
 
+		[Authorize]
+		[SwaggerOperation(Summary = "Todo")]
+		[SwaggerResponse(statusCode: 200, description: "Todo")]
+		[SwaggerResponse(statusCode: 400, description: "Validation problem with the request")]
+		[SwaggerResponse(statusCode: 401, description: "The request is not authenticated")]
+		[SwaggerResponse(statusCode: 404, description: "Could not locate item with the provided id")]
+		[SwaggerResponse(statusCode: 403, description: "The requested operation is not permitted based on granted permissions")]
+		[SwaggerResponse(statusCode: 500, description: "Internal error")]
+		[SwaggerResponse(statusCode: 503, description: "An underpinning service indicated failure")]
+		[Produces(System.Net.Mime.MediaTypeNames.Application.Json)]
+		[HttpPost("infer")]
+		public async Task<IActionResult> Infer([FromForm] IFormFile file)
+		{
+			this._logger.Debug(new MapLogEntry("infer").And("model", file));
+			using var memoryStream = new MemoryStream();
+			await file.CopyToAsync(memoryStream);
+			var base64 = Convert.ToBase64String(memoryStream.ToArray());
+			await this._aiModelRegistryService.InferAsync(base64);
+
+			this._accountingService.AccountFor(KnownActions.Infer, KnownResources.Dataset.AsAccountable());
+			this._accountingService.AccountFor(KnownActions.Invoke, KnownResources.Workflow.AsAccountable());
+
+			return Ok();
+		}
 	}
 }

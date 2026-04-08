@@ -32,7 +32,7 @@ using Terra.Gateway.App.Service.AiModelRegistry;
 
 namespace Terra.Gateway.Api
 {
-    public class Startup
+	public class Startup
 	{
 		public Startup(IConfiguration configuration, IWebHostEnvironment env)
 		{

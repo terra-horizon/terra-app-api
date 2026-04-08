@@ -36,7 +36,6 @@
 	  <Folder Include="Authorization\" />
 	  <Folder Include="Censor\" />
 	  <Folder Include="Common\" />
-	  <Folder Include="Deleter\" />
 	  <Folder Include="ErrorCode\" />
 	  <Folder Include="Event\" />
 	  <Folder Include="Exception\" />
