@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 
 namespace Terra.Gateway.App.Service.Storage
 {
@@ -33,6 +34,14 @@ namespace Terra.Gateway.App.Service.Storage
 			if (current.StartsWith(".")) return this.GetExtensionWithoutDot(current);
 
 			return current;
+		}
+
+		public async Task<string> ConvertToBase64(IFormFile file)
+		{
+			using var memoryStream = new MemoryStream();
+			await file.CopyToAsync(memoryStream);
+			byte[] fileBytes = memoryStream.ToArray();
+			return Convert.ToBase64String(fileBytes);
 		}
 	}
 }

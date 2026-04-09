@@ -348,16 +348,14 @@ namespace Terra.Gateway.Api.Controllers
 			this._logger.Debug(new MapLogEntry("infer").And("model", file));
 			await this._authorizationService.AuthorizeForce(Permission.CanExecuteImageInference);
 			if (file == null) throw new TerraValidationException("No file was provided");
+
 			List<string> allowedExtensions = await this._storageService.AllowedExtensions();
 			long allowedSize = await this._storageService.MaxFileUploadSize();
 			string extension = Path.GetExtension(file.FileName);
 			bool isAlloweExtension = allowedExtensions.Select(x => x.ToLowerInvariant()).Contains(extension.ToLowerInvariant());
 			if (file.Length > allowedSize || !isAlloweExtension) throw new TerraValidationException(this._errors.UploadRestricted.Code, this._errors.UploadRestricted.Message);
 			
-			using var memoryStream = new MemoryStream();
-			await file.CopyToAsync(memoryStream);
-			var base64 = Convert.ToBase64String(memoryStream.ToArray());
-			await this._aiModelRegistryService.InferAsync(base64);
+			await this._aiModelRegistryService.InferAsync(await this._storageService.ConvertToBase64(file));
 
 			this._accountingService.AccountFor(KnownActions.Infer, KnownResources.Dataset.AsAccountable());
 			this._accountingService.AccountFor(KnownActions.Invoke, KnownResources.Workflow.AsAccountable());
