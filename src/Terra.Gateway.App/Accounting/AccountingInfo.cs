@@ -29,21 +29,11 @@ namespace Terra.Gateway.App.Accounting
 
 	public enum KnownResources : short
 	{
-		Dataset = 0,
-		Collection = 1,
-		User = 2,
-		//No longer available. Reserving ordinal number
-		//UserCollection = 3,
-		Conversation = 4,
-		CrossDatasetDiscovery = 5,
-		Vocabulary = 6,
-		InDataExploration = 7,
-		Workflow = 8,
-		UserSettings = 9,
-		ContextGrant = 10,
-		ContextGrantAssignment = 11,
-		UserGroup = 12,
-		QueryRecommender = 13,
+		Collection = 0,
+		User = 1,
+		Vocabulary = 2,
+		Workflow = 3,
+		UserSettings = 4
 	}
 
 	public class AccountingInfo

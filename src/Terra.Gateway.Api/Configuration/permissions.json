@@ -69,6 +69,22 @@
         "AllowAnonymous": false,
         "AllowAuthenticated": false
       },
+      "CanGetImageInferenceStatus": {
+        "Roles": [ "GLOBAL_terra_admin", "GLOBAL_terra_dataset-uploader", "GLOBAL_terra_user" ],
+        "ContextRoles": [],
+        "Claims": [],
+        "Clients": [],
+        "AllowAnonymous": false,
+        "AllowAuthenticated": false
+      },
+      "CanGetImageInferenceResult": {
+        "Roles": [ "GLOBAL_terra_admin", "GLOBAL_terra_dataset-uploader", "GLOBAL_terra_user" ],
+        "ContextRoles": [],
+        "Claims": [],
+        "Clients": [],
+        "AllowAnonymous": false,
+        "AllowAuthenticated": false
+      },
       "BrowseWorkflowExecution": {
         "Roles": [ "GLOBAL_terra_admin" ],
         "ContextRoles": [],

@@ -35,12 +35,10 @@
 	  <Folder Include="Accounting\" />
 	  <Folder Include="Authorization\" />
 	  <Folder Include="Censor\" />
-	  <Folder Include="Common\" />
 	  <Folder Include="ErrorCode\" />
 	  <Folder Include="Event\" />
 	  <Folder Include="Formatting\" />
 	  <Folder Include="LogTracking\" />
-	  <Folder Include="Model\" />
 	  <Folder Include="Query\" />
 	</ItemGroup>
 

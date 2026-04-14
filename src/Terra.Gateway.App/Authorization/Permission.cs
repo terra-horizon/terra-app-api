@@ -14,6 +14,8 @@ namespace Terra.Gateway.App.Authorization
 		//Workflow
 		public const String BrowseWorkflowDefinition = "BrowseWorkflowDefinition";
 		public const String CanExecuteImageInference = "CanExecuteImageInference";
+		public const String CanGetImageInferenceStatus = "CanGetImageInferenceStatus";
+		public const String CanGetImageInferenceResult = "CanGetImageInferenceResult";
 		public const String BrowseWorkflowExecution = "BrowseWorkflowExecution";
 		public const String BrowseWorkflowTask = "BrowseWorkflowTask";
 		public const String BrowseWorkflowTaskInstance = "BrowseWorkflowTaskInstance";

@@ -97,7 +97,7 @@ namespace Terra.Gateway.App.Service.Airflow
 				DagRunId = Guid.NewGuid().ToString(),
 				LogicalDate = DateTime.UtcNow,
 				Configurations = args.Configurations
-            };
+			};
 
 			HttpRequestMessage httpRequest = new HttpRequestMessage(HttpMethod.Post, $"{this._airflowConfig.BaseUrl}{this._airflowConfig.DagRunEndpoint.Replace("{id}", args.WorkflowId)}")
 			{
@@ -143,6 +143,5 @@ namespace Terra.Gateway.App.Service.Airflow
 			String content = await response.Content.ReadAsStringAsync();
 			return content;
 		}
-
 	}
 }

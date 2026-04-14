@@ -9,4 +9,3 @@ namespace Terra.Gateway.App.Service.Airflow
 		Task<List<App.Model.WorkflowTaskInstance>> ReRunWorkflowTasksAsync(TaskInstanceDownstreamExecutionArgs args, IFieldSet fields);
 	}
 }
-

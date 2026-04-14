@@ -11,8 +11,10 @@ using Terra.Gateway.App.Authorization;
 using Terra.Gateway.App.ErrorCode;
 using Terra.Gateway.App.Event;
 using Terra.Gateway.App.Exception;
+using Terra.Gateway.App.Model;
 using Terra.Gateway.App.Query;
 using Terra.Gateway.App.Service.Airflow;
+using Terra.Gateway.App.Service.Airflow.Model;
 
 namespace Terra.Gateway.App.Service.AiModelRegistry
 {
@@ -56,7 +58,7 @@ namespace Terra.Gateway.App.Service.AiModelRegistry
 			this._jsonHandlingService = jsonHandlingService;
 		}
 
-		public async Task InferAsync(string file, IFieldSet fields = null)
+		public async Task<string> InferAsync(string file, IFieldSet fields = null)
 		{
 			this._logger.Debug(new MapLogEntry("infering").And("file", file));
 			await this._authorizationService.AuthorizeForce(Permission.CanExecuteImageInference);
@@ -68,7 +70,7 @@ namespace Terra.Gateway.App.Service.AiModelRegistry
 			if (definitions == null || definitions.Count == 0) throw new TerraNotFoundException(this._localizer["general_notFound", Common.WorkflowDefinitionKind.AiModelRegistryInference.ToString(), nameof(Model.WorkflowDefinition)]);
 			if (definitions.Count > 1) throw new TerraFoundManyException(this._localizer["general_nonUnique", Common.WorkflowDefinitionKind.AiModelRegistryInference.ToString(), nameof(Model.WorkflowDefinition)]);
 			Airflow.Model.AirflowDag selectedDefinition = definitions.FirstOrDefault();
-			_ = await this._airflowService.ExecuteWorkflowAsync(new Model.WorkflowExecutionArgs
+			WorkflowExecution workflowExecution = await this._airflowService.ExecuteWorkflowAsync(new Model.WorkflowExecutionArgs
 			{
 				WorkflowId = selectedDefinition.Id,
 				Configurations = new
@@ -82,6 +84,40 @@ namespace Terra.Gateway.App.Service.AiModelRegistry
 				nameof(Model.WorkflowExecution.WorkflowId),
 				]
 			});
+			// TODO: check if a builder here has meaning
+			return workflowExecution.Id;
+		}
+
+		public async Task<string> GetInferenceStatusAsync(string executionId, IFieldSet fields = null)
+		{
+			this._logger.Debug(new MapLogEntry("getting inference status").And("executionId", executionId));
+			await this._authorizationService.AuthorizeForce(Permission.CanGetImageInferenceStatus);
+			var query = this._queryFactory.Query<WorkflowExecutionHttpQuery>().WorkflowIds(Common.WorkflowDefinitionId.AI_MODEL_REGISTRY_INFERENCE.ToString()).Id(executionId);
+
+			AirflowDagExecution execution = await query.ByIdAsync();
+			if (execution == null) throw new TerraNotFoundException(this._localizer["general_notFound", Common.WorkflowDefinitionKind.AiModelRegistryInference.ToString(), nameof(Model.WorkflowExecution)]);
+			return execution.State;
+		}
+
+		public async Task<string> GetInferenceResultAsync(string executionId, IFieldSet fields = null)
+		{
+			this._logger.Debug(new MapLogEntry("getting inference result").And("executionId", executionId));
+			await this._authorizationService.AuthorizeForce(Permission.CanGetImageInferenceResult);
+			var xcomQuery = this._queryFactory.Query<WorkflowXcomEntryHttpQuery>()
+				.WorkflowIds(Common.WorkflowDefinitionId.AI_MODEL_REGISTRY_INFERENCE.ToString())
+				.TaskIds("infer") //TODO: make this more robust
+				.WorkflowExecutionIds(executionId);
+			xcomQuery.Page = new Paging
+			{
+				Size = 10,
+				Offset = 0,
+			};
+			List<AirflowXcomEntry> xcoms = await xcomQuery.CollectAsync();
+			if (xcoms == null || xcoms.Count == 0) throw new TerraNotFoundException(this._localizer["general_notFound", Common.WorkflowDefinitionKind.AiModelRegistryInference.ToString(), nameof(Model.WorkflowExecution)]);
+			xcomQuery.XComKey(xcoms.FirstOrDefault().Key);
+			var xcom = await xcomQuery.ByIdAsync();
+			if (xcom == null) throw new TerraNotFoundException(this._localizer["general_notFound", Common.WorkflowDefinitionKind.AiModelRegistryInference.ToString(), nameof(Model.WorkflowExecution)]);
+			return xcom.Value;
 		}
 	}
 }

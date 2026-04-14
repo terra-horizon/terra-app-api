@@ -343,7 +343,7 @@ namespace Terra.Gateway.Api.Controllers
 		[SwaggerResponse(statusCode: 503, description: "An underpinning service indicated failure")]
 		[Produces(System.Net.Mime.MediaTypeNames.Application.Json)]
 		[HttpPost("infer")]
-		public async Task<IActionResult> Infer([FromForm] IFormFile file)
+		public async Task<string> Infer([FromForm] IFormFile file)
 		{
 			this._logger.Debug(new MapLogEntry("infer").And("model", file));
 			await this._authorizationService.AuthorizeForce(Permission.CanExecuteImageInference);
@@ -355,12 +355,62 @@ namespace Terra.Gateway.Api.Controllers
 			bool isAlloweExtension = allowedExtensions.Select(x => x.ToLowerInvariant()).Contains(extension.ToLowerInvariant());
 			if (file.Length > allowedSize || !isAlloweExtension) throw new TerraValidationException(this._errors.UploadRestricted.Code, this._errors.UploadRestricted.Message);
 			
-			await this._aiModelRegistryService.InferAsync(await this._storageService.ConvertToBase64(file));
+			string executionId = await this._aiModelRegistryService.InferAsync(await this._storageService.ConvertToBase64(file));
 
-			this._accountingService.AccountFor(KnownActions.Infer, KnownResources.Dataset.AsAccountable());
+			this._accountingService.AccountFor(KnownActions.Infer, KnownResources.Workflow.AsAccountable()); //TODO: ask what this does
 			this._accountingService.AccountFor(KnownActions.Invoke, KnownResources.Workflow.AsAccountable());
 
-			return Ok();
+			return executionId;
+		}
+
+		[Authorize]
+		[ModelStateValidationFilter]
+		[SwaggerOperation(Summary = "Todo")]
+		[SwaggerResponse(statusCode: 200, description: "Todo")]
+		[SwaggerResponse(statusCode: 400, description: "Validation problem with the request")]
+		[SwaggerResponse(statusCode: 401, description: "The request is not authenticated")]
+		[SwaggerResponse(statusCode: 404, description: "Could not locate item with the provided id")]
+		[SwaggerResponse(statusCode: 403, description: "The requested operation is not permitted based on granted permissions")]
+		[SwaggerResponse(statusCode: 500, description: "Internal error")]
+		[SwaggerResponse(statusCode: 503, description: "An underpinning service indicated failure")]
+		[Produces(System.Net.Mime.MediaTypeNames.Application.Json)]
+		[HttpGet("inference-status/{executionId}")]
+		public async Task<string> InferenceStatus([FromRoute] string executionId)
+		{
+			this._logger.Debug(new MapLogEntry("inference-status").And("executionId", executionId));
+			await this._authorizationService.AuthorizeForce(Permission.CanGetImageInferenceStatus);
+			if (string.IsNullOrWhiteSpace(executionId)) throw new TerraValidationException("No executionId was provided");
+
+			var status = await this._aiModelRegistryService.GetInferenceStatusAsync(executionId);
+
+			this._accountingService.AccountFor(KnownActions.Query, KnownResources.Workflow.AsAccountable());
+
+			return status;
+		}
+
+		[Authorize]
+		[ModelStateValidationFilter]
+		[SwaggerOperation(Summary = "Todo")]
+		[SwaggerResponse(statusCode: 200, description: "Todo")]
+		[SwaggerResponse(statusCode: 400, description: "Validation problem with the request")]
+		[SwaggerResponse(statusCode: 401, description: "The request is not authenticated")]
+		[SwaggerResponse(statusCode: 404, description: "Could not locate item with the provided id")]
+		[SwaggerResponse(statusCode: 403, description: "The requested operation is not permitted based on granted permissions")]
+		[SwaggerResponse(statusCode: 500, description: "Internal error")]
+		[SwaggerResponse(statusCode: 503, description: "An underpinning service indicated failure")]
+		[Produces(System.Net.Mime.MediaTypeNames.Application.Json)]
+		[HttpGet("inference-result/{executionId}")]
+		public async Task<string> InferenceResult([FromRoute] string executionId)
+		{
+			this._logger.Debug(new MapLogEntry("inference-result").And("executionId", executionId));
+			await this._authorizationService.AuthorizeForce(Permission.CanGetImageInferenceResult);
+			if (string.IsNullOrWhiteSpace(executionId)) throw new TerraValidationException("No executionId was provided");
+
+			var status = await this._aiModelRegistryService.GetInferenceResultAsync(executionId);
+
+			this._accountingService.AccountFor(KnownActions.Query, KnownResources.Workflow.AsAccountable());
+
+			return status;
 		}
 	}
 }
