@@ -105,13 +105,8 @@ namespace Terra.Gateway.App.Service.AiModelRegistry
 			await this._authorizationService.AuthorizeForce(Permission.CanGetImageInferenceResult);
 			var xcomQuery = this._queryFactory.Query<WorkflowXcomEntryHttpQuery>()
 				.WorkflowIds(Common.WorkflowDefinitionId.AI_MODEL_REGISTRY_INFERENCE.ToString())
-				.TaskIds("infer") //TODO: make this more robust
+				.TaskIds(Common.WorkflowTaskId.infer.ToString())
 				.WorkflowExecutionIds(executionId);
-			xcomQuery.Page = new Paging
-			{
-				Size = 10,
-				Offset = 0,
-			};
 			List<AirflowXcomEntry> xcoms = await xcomQuery.CollectAsync();
 			if (xcoms == null || xcoms.Count == 0) throw new TerraNotFoundException(this._localizer["general_notFound", Common.WorkflowDefinitionKind.AiModelRegistryInference.ToString(), nameof(Model.WorkflowExecution)]);
 			xcomQuery.XComKey(xcoms.FirstOrDefault().Key);
