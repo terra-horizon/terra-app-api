@@ -10,6 +10,8 @@ namespace Terra.Gateway.App.Accounting
 		Invoke = 4,
 		Rerun = 5,
 		Infer = 6,
+		InferStatus = 7,
+		InferResult = 8,
 	}
 
 	public enum KnownUnits : short

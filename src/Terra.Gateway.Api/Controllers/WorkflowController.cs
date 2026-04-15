@@ -383,7 +383,7 @@ namespace Terra.Gateway.Api.Controllers
 
 			var status = await this._aiModelRegistryService.GetInferenceStatusAsync(executionId);
 
-			this._accountingService.AccountFor(KnownActions.Query, KnownResources.Workflow.AsAccountable());
+			this._accountingService.AccountFor(KnownActions.InferStatus, KnownResources.Workflow.AsAccountable());
 
 			return status;
 		}
@@ -408,7 +408,7 @@ namespace Terra.Gateway.Api.Controllers
 
 			var status = await this._aiModelRegistryService.GetInferenceResultAsync(executionId);
 
-			this._accountingService.AccountFor(KnownActions.Query, KnownResources.Workflow.AsAccountable());
+			this._accountingService.AccountFor(KnownActions.InferResult, KnownResources.Workflow.AsAccountable());
 
 			return status;
 		}
