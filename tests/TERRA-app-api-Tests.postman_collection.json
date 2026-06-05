@@ -1,0 +1,256 @@
+{
+    "info": {
+        "_postman_id": "22222222-3333-4444-5555-666666666666",
+        "name": "TERRA-Workflow-Smoke-Test",
+        "description": "Minimal Terra workflow smoke test: AAI healthcheck, password-grant user token, and protected workflow definition query using the acquired Bearer token.",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "Healthcheck",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {},
+                        "exec": [
+                            "if (pm.response.code === 200) {",
+                            "    pm.test(\"Successful healthcheck\", () => {",
+                            "        pm.expect(pm.response.code).to.eql(200);",
+                            "    });",
+                            "}",
+                            "else {",
+                            "    pm.test(\"Failed in healthcheck\", () => {",
+                            "        pm.expect(pm.response.code, pm.response.text()).to.eql(200);",
+                            "    });",
+                            "    pm.execution.setNextRequest(null);",
+                            "}"
+                        ]
+                    }
+                }
+            ],
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                    "raw": "{{baseUrl}}/oauth/health",
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "path": [
+                        "oauth",
+                        "health"
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "Access Token - Terra user",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {},
+                        "exec": [
+                            "if (pm.response.code === 200) {",
+                            "    pm.test(\"Successfully acquired Terra user access token\", () => {",
+                            "        pm.expect(pm.response.code).to.eql(200);",
+                            "    });",
+                            "",
+                            "    const resp = pm.response.json();",
+                            "",
+                            "    pm.test(\"Token response contains access token\", () => {",
+                            "        pm.expect(resp.access_token).to.be.a(\"string\").and.not.empty;",
+                            "    });",
+                            "",
+                            "    pm.collectionVariables.set(\"userAccessToken\", resp.access_token);",
+                            "",
+                            "    if (resp.refresh_token) {",
+                            "        pm.collectionVariables.set(\"userRefreshToken\", resp.refresh_token);",
+                            "    }",
+                            "}",
+                            "else {",
+                            "    pm.test(\"Failed to acquire Terra user access token\", () => {",
+                            "        pm.expect(pm.response.code, pm.response.text()).to.eql(200);",
+                            "    });",
+                            "    pm.execution.setNextRequest(null);",
+                            "}"
+                        ]
+                    }
+                }
+            ],
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/x-www-form-urlencoded",
+                        "type": "text"
+                    }
+                ],
+                "body": {
+                    "mode": "urlencoded",
+                    "urlencoded": [
+                        {
+                            "key": "grant_type",
+                            "value": "password",
+                            "type": "text"
+                        },
+                        {
+                            "key": "client_id",
+                            "value": "{{clientId-A}}",
+                            "type": "text"
+                        },
+                        {
+                            "key": "username",
+                            "value": "{{userName}}",
+                            "type": "text"
+                        },
+                        {
+                            "key": "password",
+                            "value": "{{userPass}}",
+                            "type": "text"
+                        },
+                        {
+                            "key": "scope",
+                            "value": "{{scope}}",
+                            "type": "text"
+                        }
+                    ]
+                },
+                "url": {
+                    "raw": "{{baseUrl}}/oauth/realms/{{realm}}/protocol/openid-connect/token",
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "path": [
+                        "oauth",
+                        "realms",
+                        "{{realm}}",
+                        "protocol",
+                        "openid-connect",
+                        "token"
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "Workflow Definition Query",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {},
+                        "exec": [
+                            "if (pm.response.code === 200) {",
+                            "    pm.test(\"Successfully queried workflow definitions\", () => {",
+                            "        pm.expect(pm.response.code).to.eql(200);",
+                            "    });",
+                            "",
+                            "    const resp = pm.response.json();",
+                            "",
+                            "    pm.test(\"Workflow query response is an object\", () => {",
+                            "        pm.expect(resp).to.be.an(\"object\");",
+                            "    });",
+                            "",
+                            "    pm.test(\"Workflow query response contains result data\", () => {",
+                            "        pm.expect(resp.items || resp.data || resp.results || resp.entries).to.exist;",
+                            "    });",
+                            "}",
+                            "else {",
+                            "    pm.test(\"Failed to query workflow definitions\", () => {",
+                            "        pm.expect(pm.response.code, pm.response.text()).to.eql(200);",
+                            "    });",
+                            "    pm.execution.setNextRequest(null);",
+                            "}"
+                        ]
+                    }
+                }
+            ],
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{userAccessToken}}",
+                        "type": "text"
+                    },
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json",
+                        "type": "text"
+                    },
+                    {
+                        "key": "Accept",
+                        "value": "application/json",
+                        "type": "text"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n    \"project\": {\n        \"fields\": [\n            \"id\"\n        ]\n    },\n    \"metadata\": {\n        \"countAll\": false\n    }\n}",
+                    "options": {
+                        "raw": {
+                            "language": "json"
+                        }
+                    }
+                },
+                "url": {
+                    "raw": "{{serviceBaseUrl}}/api/workflow/definition/query",
+                    "host": [
+                        "{{serviceBaseUrl}}"
+                    ],
+                    "path": [
+                        "api",
+                        "workflow",
+                        "definition",
+                        "query"
+                    ]
+                }
+            },
+            "response": []
+        }
+    ],
+    "event": [
+        {
+            "listen": "prerequest",
+            "script": {
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {},
+                "exec": [
+                    ""
+                ]
+            }
+        },
+        {
+            "listen": "test",
+            "script": {
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {},
+                "exec": [
+                    ""
+                ]
+            }
+        }
+    ],
+    "variable": [
+        {
+            "key": "userAccessToken",
+            "value": ""
+        },
+        {
+            "key": "userRefreshToken",
+            "value": ""
+        }
+    ]
+}

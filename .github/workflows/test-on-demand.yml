@@ -1,0 +1,44 @@
+name: "Workflow Smoke Test Scenario (On-Demand)"
+
+on:
+    workflow_dispatch:
+        inputs:
+            tag:
+                description: "Repository tag/branch/commit to test"
+                required: true
+                default: "main"
+
+jobs:
+    api-tests:
+        name: Workflow API Smoke Test
+        runs-on: ubuntu-latest
+
+        env:
+            TEST_BASEURL: ${{ secrets.TEST_BASEURL }}
+            TEST_REALM: ${{ secrets.TEST_REALM }}
+            TEST_USERNAME: ${{ secrets.TEST_USERNAME }}
+            TEST_USERPASS: ${{ secrets.TEST_USERPASS }}
+            TEST_CLIENTIDA: ${{ secrets.TEST_CLIENTIDA }}
+            TEST_SCOPE: ${{ secrets.TEST_SCOPE }}
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+              with:
+                  ref: ${{ github.event.inputs.tag }}
+
+            - name: Run Newman CLI reporter
+              run: |
+                  set -o pipefail
+                  docker run --rm \
+                    -v "${{ github.workspace }}:/etc/newman" \
+                    postman/newman:6-ubuntu \
+                    run tests/TERRA-app-api-Tests.postman_collection.json \
+                    --env-var "baseUrl=${{ env.TEST_BASEURL }}" \
+                    --env-var "serviceBaseUrl=${{ env.TEST_BASEURL }}" \
+                    --env-var "realm=${{ env.TEST_REALM }}" \
+                    --env-var "userName=${{ env.TEST_USERNAME }}" \
+                    --env-var "userPass=${{ env.TEST_USERPASS }}" \
+                    --env-var "clientId-A=${{ env.TEST_CLIENTIDA }}" \
+                    --env-var "scope=${{ env.TEST_SCOPE }}" \
+                    --reporters cli,emojitrain
