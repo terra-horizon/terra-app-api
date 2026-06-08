@@ -2,7 +2,7 @@
 	"info": {
 		"_postman_id": "22222222-3333-4444-5555-666666666666",
 		"name": "TERRA-Workflow-Smoke-Test",
-		"description": "Minimal Terra workflow smoke test: AAI healthcheck, password-grant user token, protected workflow definition query using the acquired Bearer token, and a negative authorization check using a second user that must receive 403.",
+		"description": "Minimal Terra workflow smoke test: AAI healthcheck, public current version-info check, password-grant user token, protected workflow definition query using the acquired Bearer token, and a negative authorization check using a second user that must receive 403.",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
@@ -42,6 +42,60 @@
 					"path": [
 						"oauth",
 						"health"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Current Version Info",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {},
+						"exec": [
+							"if (pm.response.code === 200) {",
+							"    pm.test(\"Successfully retrieved current version info\", () => {",
+							"        pm.expect(pm.response.code).to.eql(200);",
+							"    });",
+							"",
+							"    const resp = pm.response.json();",
+							"",
+							"    pm.test(\"Current version info response is an array\", () => {",
+							"        pm.expect(resp).to.be.an(\"array\");",
+							"    });",
+							"}",
+							"else {",
+							"    pm.test(\"Failed to retrieve current version info\", () => {",
+							"        pm.expect(pm.response.code, pm.response.text()).to.eql(200);",
+							"    });",
+							"    pm.execution.setNextRequest(null);",
+							"}"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{serviceBaseUrl}}/api/version-info/current",
+					"host": [
+						"{{serviceBaseUrl}}"
+					],
+					"path": [
+						"api",
+						"version-info",
+						"current"
 					]
 				}
 			},
