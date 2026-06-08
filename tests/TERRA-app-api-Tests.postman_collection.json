@@ -196,7 +196,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"project\": {\n        \"fields\": [\n            \"id\"\n        ]\n    },\n    \"metadata\": {\n        \"countAll\": false\n    }\n}",
+					"raw": "{\n    \"project\": {\n        \"fields\": [\n            \"id\"\n        ]\n    }\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -365,7 +365,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"project\": {\n        \"fields\": [\n            \"id\"\n        ]\n    },\n    \"metadata\": {\n        \"countAll\": false\n    }\n}",
+					"raw": "{\n    \"project\": {\n        \"fields\": [\n            \"id\"\n        ]\n    }\n}",
 					"options": {
 						"raw": {
 							"language": "json"
