@@ -216,7 +216,7 @@
 							"    });",
 							"",
 							"    pm.test(\"Workflow query response contains result data\", () => {",
-							"        pm.expect(resp.items || resp.data || resp.results || resp.entries).to.exist;",
+							"        pm.expect(resp.items).to.exist;",
 							"    });",
 							"}",
 							"else {",
