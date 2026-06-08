@@ -6,7 +6,7 @@ on:
       tag:
         description: "Repository tag/branch/commit to test"
         required: true
-        default: "main"
+        default: "master"
 
 jobs:
   api-tests:
