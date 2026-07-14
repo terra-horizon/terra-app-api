@@ -10,6 +10,7 @@ using Cite.WebTools.CurrentPrincipal.Extensions;
 using Cite.WebTools.FieldSet;
 using Cite.WebTools.HostingEnvironment.Extensions;
 using Cite.WebTools.Localization.Extensions;
+using Microsoft.EntityFrameworkCore;
 using Serilog;
 using Terra.Gateway.Api.AccessToken;
 using Terra.Gateway.Api.Authorization;
@@ -73,6 +74,7 @@ namespace Terra.Gateway.Api
 				.AddTransient<AccountBuilder>() //Account builder
 				.AddValidatorsAndFactory(typeof(Cite.Tools.Validation.IValidator), typeof(Terra.Gateway.App.AssemblyHandle), typeof(Terra.Gateway.Api.AssemblyHandle)) //Validators
 				.AddDeletersAndFactory(typeof(Cite.Tools.Data.Deleter.IDeleter), typeof(Terra.Gateway.App.AssemblyHandle)) //Deleters
+				.AddDbContext<Terra.Gateway.App.Data.AppDbContext>(options => options.UseNpgsql(this._config.GetValue<String>("DB:ConnectionStrings:AppDbContext"))) //DbContext
 			;
 
 			services
